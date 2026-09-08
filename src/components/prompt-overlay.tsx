@@ -66,7 +66,7 @@ export function PromptOverlay({
     <div className="fixed inset-0 z-50 flex flex-col bg-white md:flex-row">
       {/* Image area */}
       <div className="relative flex flex-1 items-center justify-center bg-[#f6f6f4] p-4 md:p-8">
-        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full border bg-white px-2 py-1.5 shadow-sm">
+        <div className="absolute right-4 top-4 flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
