@@ -81,7 +81,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-muted/30">
-      <section id="hero" className="w-full px-4 pt-8 pb-8 md:px-6 lg:px-8 md:pt-10 md:pb-8">
+      <section id="hero" className="w-full px-4 pt-8 pb-12 md:px-6 lg:px-8 md:pt-10 md:pb-12">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
             Prompt library · {PROMPTS.length} curated examples · Daily updates
