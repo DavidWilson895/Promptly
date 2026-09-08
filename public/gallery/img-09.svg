@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="800" viewBox="0 0 640 800">
+  <defs>
+    <filter id="gimg8s9si" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5"/>
+    </filter>
+  </defs>
+  <rect width="640" height="800" fill="oklch(0.25 0.1 0)"/>
+  <g>
+    <circle cx="246.9" cy="602.2" r="188.6" fill="oklch(0.4 0.14 355)" opacity="0.85"/>
+    <rect x="316.3" y="28.1" width="371.9" height="464.8" fill="oklch(0.6 0.1 350)" rx="111.6" opacity="0.8"/>
+    <path d="M9.1 745.7 C 105.7 174.0, 395.3 174.0, 491.8 745.7 Z" fill="oklch(0.88 0.04 40)" opacity="0.75"/>
+    <circle cx="322.4" cy="616.5" r="61.2" fill="oklch(0.25 0.1 0)" opacity="0.85"/>
+    <rect x="94.7" y="430.0" width="233.9" height="292.4" fill="oklch(0.6 0.1 350)" rx="70.2" opacity="0.8"/>
+    <path d="M115.8 644.8 C 191.0 3.9, 416.8 3.9, 492.0 644.8 Z" fill="oklch(0.4 0.14 355)" opacity="0.75"/>
+    <circle cx="359.3" cy="569.4" r="134.4" fill="oklch(0.4 0.14 355)" opacity="0.85"/>
+    <path d="M0 624 Q 192 496 352 656 T 640 560 V 800 H 0 Z" fill="oklch(0.6 0.1 350)" opacity="0.55"/>
+    <circle cx="499.20000000000005" cy="176" r="70" fill="oklch(0.88 0.04 40)" opacity="0.9"/>
+  </g>
+  <g filter="url(#gimg8s9si)" opacity="0.35">
+    <circle cx="246.9" cy="602.2" r="188.6" fill="oklch(0.4 0.14 355)" opacity="0.85"/>
+    <rect x="316.3" y="28.1" width="371.9" height="464.8" fill="oklch(0.6 0.1 350)" rx="111.6" opacity="0.8"/>
+  </g>
+</svg>
