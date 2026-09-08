@@ -61,11 +61,11 @@ function Chip({
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex shrink-0 items-center rounded-full border px-3 py-1 text-sm whitespace-nowrap",
-        "transition-colors duration-150",
+        "inline-flex shrink-0 items-center rounded-full border px-3 py-1 text-[13px] whitespace-nowrap",
+        "transition-all duration-150",
         active
-          ? "border-transparent bg-foreground text-background"
-          : "text-muted-foreground hover:border-border hover:text-foreground"
+          ? "border-transparent bg-foreground text-background shadow-sm"
+          : "border-border/60 bg-card text-muted-foreground hover:border-foreground/15 hover:bg-muted/50 hover:text-foreground"
       )}
     >
       {children}
@@ -99,28 +99,28 @@ export function FilterBar({
   resultCount: number;
 }) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3.5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative w-full sm:max-w-xs">
+        <div className="relative w-full sm:max-w-[320px]">
           <Search
-            className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+            className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground"
             aria-hidden="true"
           />
           <Input
             value={search}
             onChange={(e) => onSearch(e.target.value)}
-            placeholder="Search prompts…"
-            className="pl-9 pr-8"
+            placeholder="Search prompts, models, styles…"
+            className="h-8 rounded-full border-transparent bg-muted pl-9 pr-8 text-sm placeholder:text-muted-foreground/70 focus-visible:border-input focus-visible:bg-background"
             aria-label="Search prompts"
           />
           {search ? (
             <button
               type="button"
               onClick={() => onSearch("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-muted-foreground hover:text-foreground"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:text-foreground"
               aria-label="Clear search"
             >
-              <X className="size-4" />
+              <X className="size-3.5" />
             </button>
           ) : null}
         </div>
@@ -131,10 +131,10 @@ export function FilterBar({
             if (value) onSort(value as SortKey);
           }}
         >
-          <SelectTrigger className="w-full sm:w-40" aria-label="Sort prompts">
+          <SelectTrigger className="h-8 w-full rounded-full border-transparent bg-muted pl-3 pr-2 text-sm sm:w-36" aria-label="Sort prompts">
             <SelectValue placeholder="Sort" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent align="end">
             <SelectItem value="trending">Trending</SelectItem>
             <SelectItem value="latest">Latest</SelectItem>
             <SelectItem value="popular">Most liked</SelectItem>
@@ -142,10 +142,10 @@ export function FilterBar({
         </Select>
       </div>
 
-      {/* Category stays as chips */}
-      <div className="flex items-center gap-3">
-        <span className="w-20 shrink-0 text-xs font-medium text-muted-foreground">
-          Category
+      {/* Category */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="shrink-0 text-xs font-medium tracking-wide text-muted-foreground">
+          Browse
         </span>
         <div className="flex flex-wrap items-center gap-1.5">
           <Chip active={category === null} onClick={() => onCategory(null)}>
@@ -163,58 +163,60 @@ export function FilterBar({
         </div>
       </div>
 
-      {/* Model + Style as dropdowns */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-muted-foreground">Model</span>
-          <Select
-            value={model ?? "All models"}
-            onValueChange={(v) => onModel(v === "All models" ? null : (v as Model))}
-          >
-            <SelectTrigger className="h-8 gap-2 rounded-full pl-2.5 pr-2 text-sm" aria-label="Filter by model">
-              <span className="inline-flex items-center gap-1.5">
-                {model ? <ModelIcon model={model} /> : null}
+      {/* Model + Style + count */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/40 pt-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-medium tracking-wide text-muted-foreground">Model</span>
+            <Select
+              value={model ?? "All models"}
+              onValueChange={(v) => onModel(v === "All models" ? null : (v as Model))}
+            >
+              <SelectTrigger className="h-7 gap-1.5 rounded-full border-border/60 bg-card px-2.5 text-[13px] hover:bg-muted/50" aria-label="Filter by model">
+                <span className="inline-flex items-center gap-1.5">
+                  {model ? <ModelIcon model={model} /> : null}
+                  <SelectValue />
+                </span>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All models">All models</SelectItem>
+                {MODELS.map((m) => (
+                  <SelectItem key={m} value={m}>
+                    <span className="inline-flex items-center gap-2">
+                      <ModelIcon model={m} />
+                      {m}
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-medium tracking-wide text-muted-foreground">Style</span>
+            <Select
+              value={style ?? "All styles"}
+              onValueChange={(v) => onStyle(v === "All styles" ? null : (v as Style))}
+            >
+              <SelectTrigger className="h-7 rounded-full border-border/60 bg-card px-2.5 text-[13px] hover:bg-muted/50" aria-label="Filter by style">
                 <SelectValue />
-              </span>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All models">All models</SelectItem>
-              {MODELS.map((m) => (
-                <SelectItem key={m} value={m}>
-                  <span className="inline-flex items-center gap-2">
-                    <ModelIcon model={m} />
-                    {m}
-                  </span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All styles">All styles</SelectItem>
+                {STYLES.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-muted-foreground">Style</span>
-          <Select
-            value={style ?? "All styles"}
-            onValueChange={(v) => onStyle(v === "All styles" ? null : (v as Style))}
-          >
-            <SelectTrigger className="h-8 rounded-full pl-2.5 pr-2 text-sm" aria-label="Filter by style">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All styles">All styles</SelectItem>
-              {STYLES.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {s}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <p className="text-xs text-muted-foreground tabular-nums">
+          {resultCount} {resultCount === 1 ? "prompt" : "prompts"} · <span className="hidden sm:inline">refined for your model</span>
+        </p>
       </div>
-
-      <p className="text-xs text-muted-foreground tabular-nums">
-        {resultCount} {resultCount === 1 ? "prompt" : "prompts"}
-      </p>
     </div>
   );
 }
