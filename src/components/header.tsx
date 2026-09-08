@@ -17,25 +17,16 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const hero = document.getElementById("hero");
-    if (!hero) {
-      const onScroll = () => setScrolled(window.scrollY > 220);
-      onScroll();
-      window.addEventListener("scroll", onScroll, { passive: true });
-      return () => window.removeEventListener("scroll", onScroll);
-    }
-    const obs = new IntersectionObserver(
-      ([entry]) => setScrolled(!entry.isIntersecting),
-      { rootMargin: "-56px 0px 0px 0px", threshold: 0 }
-    );
-    obs.observe(hero);
-    return () => obs.disconnect();
+    const onScroll = () => setScrolled(window.scrollY > 280);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-40 border-b transition-all duration-300",
         scrolled ? "bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "border-transparent bg-transparent backdrop-blur-none"
       )}
     >
