@@ -96,21 +96,6 @@ export function FilterBar({
     <div className="flex flex-col gap-1">
       {/* Browse + Trending */}
       <div className="flex flex-wrap items-center gap-2">
-        <Select
-          value={sort}
-          onValueChange={(value) => {
-            if (value) onSort(value as SortKey);
-          }}
-        >
-          <SelectTrigger className="h-7 rounded-full border-border/60 bg-card px-2.5 text-[13px] hover:bg-muted/50" aria-label="Sort prompts">
-            <SelectValue placeholder="Sort" />
-          </SelectTrigger>
-          <SelectContent align="start">
-            <SelectItem value="trending">Trending</SelectItem>
-            <SelectItem value="latest">Latest</SelectItem>
-            <SelectItem value="popular">Most liked</SelectItem>
-          </SelectContent>
-        </Select>
         <span className="w-12 shrink-0 text-xs font-medium tracking-wide text-muted-foreground">
           Browse
         </span>
@@ -127,6 +112,23 @@ export function FilterBar({
               {value}
             </Chip>
           ))}
+        </div>
+        <div className="ml-auto">
+          <Select
+            value={sort}
+            onValueChange={(value) => {
+              if (value) onSort(value as SortKey);
+            }}
+          >
+            <SelectTrigger className="h-7 rounded-full border-border/60 bg-card px-2.5 text-[13px] hover:bg-muted/50" aria-label="Sort prompts">
+              <SelectValue placeholder="Sort" />
+            </SelectTrigger>
+            <SelectContent align="end">
+              <SelectItem value="trending">Trending</SelectItem>
+              <SelectItem value="latest">Latest</SelectItem>
+              <SelectItem value="popular">Most liked</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
