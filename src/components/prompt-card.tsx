@@ -9,7 +9,7 @@ export function PromptCard({
   onOpen: (prompt: Prompt) => void;
 }) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/10">
+    <article className="group overflow-hidden rounded-xl border bg-card shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/10">
       <button
         type="button"
         onClick={() => onOpen(prompt)}
@@ -38,19 +38,6 @@ export function PromptCard({
           </span>
         </div>
       </button>
-
-      <div className="flex flex-1 flex-col gap-2 p-3.5 pb-4">
-        <button
-          type="button"
-          onClick={() => onOpen(prompt)}
-          className="text-left font-heading text-sm font-medium text-balance leading-snug hover:underline"
-        >
-          {prompt.title}
-        </button>
-        <p className="line-clamp-2 text-xs text-pretty leading-relaxed text-muted-foreground">
-          {prompt.prompt}
-        </p>
-      </div>
     </article>
   );
 }
