@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 72" width="120" height="72" role="img" aria-label="Promptly logo">
+  <defs>
+    <linearGradient id="logo-grad" x1="18%" y1="6%" x2="82%" y2="92%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#ff2b1a"/>
+      <stop offset="18%" stop-color="#ff7a00"/>
+      <stop offset="42%" stop-color="#ffd400"/>
+      <stop offset="62%" stop-color="#fff2a8"/>
+      <stop offset="78%" stop-color="#7ac8e6"/>
+      <stop offset="100%" stop-color="#3a8bdc"/>
+    </linearGradient>
+  </defs>
+  <!-- Two overlapping rounded diamonds -->
+  <rect x="14" y="10" width="38" height="52" rx="10" ry="10" fill="none" stroke="url(#logo-grad)" stroke-width="7" transform="rotate(-16 33 36)" stroke-linejoin="round"/>
+  <rect x="52" y="10" width="38" height="52" rx="10" ry="10" fill="none" stroke="url(#logo-grad)" stroke-width="7" transform="rotate(-16 71 36)" stroke-linejoin="round"/>
+</svg>

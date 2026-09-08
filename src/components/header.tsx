@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Bookmark, Image as ImageIcon } from "lucide-react";
+import { Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLink = cn(
@@ -15,10 +15,16 @@ export function Header() {
           <Link
             href="/"
             className="flex items-center gap-2 text-base font-medium tracking-tight"
+            aria-label="Promptly home"
           >
-            <span className="flex size-7 items-center justify-center rounded-md bg-foreground text-background">
-              <ImageIcon className="size-4" aria-hidden="true" />
-            </span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.svg"
+              alt=""
+              width={38}
+              height={22}
+              className="h-6 w-auto"
+            />
             Promptly
           </Link>
 
