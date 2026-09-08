@@ -14,44 +14,48 @@ const navLink = cn(
 
 export function Header() {
   const { search, setSearch } = useSearch();
-  const [scrolled, setScrolled] = useState(false);
+  const [stage, setStage] = useState(0);
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const hero = document.getElementById("hero");
-    if (!hero) {
-      const onScroll = () => setScrolled(window.scrollY > 300);
-      onScroll();
-      window.addEventListener("scroll", onScroll, { passive: true });
-      return () => window.removeEventListener("scroll", onScroll);
-    }
-    const obs = new IntersectionObserver(
-      ([entry]) => setScrolled(!entry.isIntersecting),
-      { rootMargin: "-56px 0px 0px 0px", threshold: 0 }
-    );
-    obs.observe(hero);
-    return () => obs.disconnect();
+    const onScroll = () => {
+      const y = window.scrollY;
+      const heroH = hero ? hero.offsetHeight : 360;
+      const trigger = heroH - 56;
+      if (y < trigger - 24) setStage(0);
+      else if (y < trigger + 24) setStage(1);
+      else if (y < trigger + 80) setStage(2);
+      else setStage(3);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const showSearch = scrolled;
+  const showSearch = stage >= 1;
+  const headerBg =
+    stage === 0
+      ? "border-transparent bg-transparent backdrop-blur-none"
+      : stage === 1
+        ? "border-border/30 bg-background/40 backdrop-blur-sm"
+        : stage === 2
+          ? "border-border/60 bg-background/75 backdrop-blur-md"
+          : "border-border bg-card shadow-sm backdrop-blur-xl";
 
   return (
-    <header
-      className={cn(
-        "fixed top-0 left-0 right-0 z-40 border-b transition-all duration-300",
-        scrolled ? "bg-card shadow-sm" : "border-transparent bg-transparent"
-      )}
-    >
+    <header className={cn("fixed top-0 left-0 right-0 z-40 border-b transition-all duration-500", headerBg)}>
+
       <div className="relative flex h-14 w-full items-center gap-4 px-4 md:px-6 lg:px-8">
         <div className="flex shrink-0 items-center gap-6">
           <Link
             href="/"
-            className="flex items-center gap-2 text-base font-medium tracking-tight"
+            className="flex items-center gap-2 text-base font-medium tracking-tight z-50 relative"
             aria-label="Promptly home"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.svg" alt="" width={38} height={22} className="h-6 w-auto" />
-            Promptly
+            <img src="/logo.svg" alt="Promptly" width={38} height={22} className="h-6 w-auto drop-shadow-sm" />
+            <span className="hidden sm:inline text-foreground">Promptly</span>
           </Link>
 
           <nav className="hidden items-center gap-1 sm:flex" aria-label="Main">
