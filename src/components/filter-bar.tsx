@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -8,7 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, X } from "lucide-react";
 import {
   CATEGORIES,
   MODELS,
@@ -74,8 +72,6 @@ function Chip({
 }
 
 export function FilterBar({
-  search,
-  onSearch,
   model,
   onModel,
   category,
@@ -86,8 +82,6 @@ export function FilterBar({
   onSort,
   resultCount,
 }: {
-  search: string;
-  onSearch: (value: string) => void;
   model: Model | null;
   onModel: (value: Model | null) => void;
   category: Category | null;
@@ -100,31 +94,7 @@ export function FilterBar({
 }) {
   return (
     <div className="flex flex-col gap-3.5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative w-full sm:max-w-[320px]">
-          <Search
-            className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground"
-            aria-hidden="true"
-          />
-          <Input
-            value={search}
-            onChange={(e) => onSearch(e.target.value)}
-            placeholder="Search prompts, models, styles…"
-            className="h-8 rounded-full border-transparent bg-muted pl-9 pr-8 text-sm placeholder:text-muted-foreground/70 focus-visible:border-input focus-visible:bg-background"
-            aria-label="Search prompts"
-          />
-          {search ? (
-            <button
-              type="button"
-              onClick={() => onSearch("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:text-foreground"
-              aria-label="Clear search"
-            >
-              <X className="size-3.5" />
-            </button>
-          ) : null}
-        </div>
-
+      <div className="flex justify-end">
         <Select
           value={sort}
           onValueChange={(value) => {

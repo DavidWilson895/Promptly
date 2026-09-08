@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Instrument_Serif, JetBrains_Mono, Outfit } from "next/font/google";
 import { Header } from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
+import { SearchProvider } from "@/lib/search-context";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -40,17 +41,17 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${outfit.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Header />
-        {children}
-        <footer className="border-t">
-          <div className="flex w-full items-center justify-between px-4 py-6 text-sm text-muted-foreground md:px-6 lg:px-8">
-            <span>Promptly © {new Date().getFullYear()}</span>
-            <span className="hidden sm:inline">
-              Curated AI image prompts
-            </span>
-          </div>
-        </footer>
-        <Toaster />
+        <SearchProvider>
+          <Header />
+          {children}
+          <footer className="border-t">
+            <div className="flex w-full items-center justify-between px-4 py-6 text-sm text-muted-foreground md:px-6 lg:px-8">
+              <span>Promptly © {new Date().getFullYear()}</span>
+              <span className="hidden sm:inline">Curated AI image prompts</span>
+            </div>
+          </footer>
+          <Toaster />
+        </SearchProvider>
       </body>
     </html>
   );

@@ -1,8 +1,11 @@
 "use client";
 
+import { Search, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 import { FilterBar, type SortKey } from "@/components/filter-bar";
+import { useSearch } from "@/lib/search-context";
 import { PromptCard } from "@/components/prompt-card";
 import { PromptOverlay } from "@/components/prompt-overlay";
 import {
@@ -35,7 +38,7 @@ function sortPrompts(prompts: Prompt[], sort: SortKey): Prompt[] {
 }
 
 export default function HomePage() {
-  const [search, setSearch] = useState("");
+  const { search, setSearch } = useSearch();
   const [model, setModel] = useState<Model | null>(null);
   const [category, setCategory] = useState<Category | null>(null);
   const [style, setStyle] = useState<Style | null>(null);
@@ -86,7 +89,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-muted/30">
-      <section className="w-full px-4 pt-10 pb-8 md:px-6 lg:px-8 md:pt-12 md:pb-10">
+      <section id="hero" className="w-full px-4 pt-10 pb-8 md:px-6 lg:px-8 md:pt-12 md:pb-10">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
             Prompt library · {PROMPTS.length} curated examples · Daily updates
@@ -101,14 +104,35 @@ export default function HomePage() {
             Each card pairs an image with the exact prompt that made it — tagged by
             model and style so you can find what fits your tool and remix it in one click.
           </p>
+          <div className="relative mx-auto mt-6 w-full max-w-xl">
+            <Search
+              className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search prompts, models, styles…"
+              className="h-11 rounded-full border-border/60 bg-white pl-11 pr-10 text-sm shadow-sm placeholder:text-muted-foreground/70"
+              aria-label="Search prompts"
+            />
+            {search ? (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-muted p-1.5 text-muted-foreground hover:text-foreground"
+                aria-label="Clear search"
+              >
+                <X className="size-3.5" />
+              </button>
+            ) : null}
+          </div>
         </div>
       </section>
 
       <main className="w-full px-4 pb-16 md:px-6 lg:px-8">
         <div className="sticky top-14 z-30 border-b bg-card -mx-4 px-4 py-3 shadow-sm md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
           <FilterBar
-            search={search}
-            onSearch={setSearch}
             model={model}
             onModel={setModel}
             category={category}

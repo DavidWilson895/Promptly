@@ -1,5 +1,10 @@
+"use client";
+
 import Link from "next/link";
-import { Bookmark } from "lucide-react";
+import { Bookmark, Search, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { useSearch } from "@/lib/search-context";
 import { cn } from "@/lib/utils";
 
 const navLink = cn(
@@ -8,23 +13,36 @@ const navLink = cn(
 );
 
 export function Header() {
+  const { search, setSearch } = useSearch();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const hero = document.getElementById("hero");
+    if (!hero) {
+      const onScroll = () => setScrolled(window.scrollY > 220);
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      return () => window.removeEventListener("scroll", onScroll);
+    }
+    const obs = new IntersectionObserver(
+      ([entry]) => setScrolled(!entry.isIntersecting),
+      { rootMargin: "-56px 0px 0px 0px", threshold: 0 }
+    );
+    obs.observe(hero);
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
-      <div className="flex h-14 w-full items-center justify-between px-4 md:px-6 lg:px-8">
-        <div className="flex items-center gap-6">
+      <div className="flex h-14 w-full items-center gap-4 px-4 md:px-6 lg:px-8">
+        <div className="flex shrink-0 items-center gap-6">
           <Link
             href="/"
             className="flex items-center gap-2 text-base font-medium tracking-tight"
             aria-label="Promptly home"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.svg"
-              alt=""
-              width={38}
-              height={22}
-              className="h-6 w-auto"
-            />
+            <img src="/logo.svg" alt="" width={38} height={22} className="h-6 w-auto" />
             Promptly
           </Link>
 
@@ -38,7 +56,38 @@ export function Header() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div
+          className={cn(
+            "hidden flex-1 justify-center transition-all duration-300 md:flex",
+            scrolled ? "opacity-100" : "pointer-events-none opacity-0"
+          )}
+        >
+          <div className="relative w-full max-w-md">
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search prompts, models, styles…"
+              className="h-8 rounded-full border-transparent bg-muted pl-9 pr-8 text-sm placeholder:text-muted-foreground/70 focus-visible:bg-background"
+              aria-label="Search prompts"
+            />
+            {search ? (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:text-foreground"
+                aria-label="Clear search"
+              >
+                <X className="size-3.5" />
+              </button>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-2">
           <Link href="/my-library" className={cn(navLink, "sm:hidden")}>
             <Bookmark className="size-4" aria-hidden="true" />
             <span className="sr-only">My Library</span>
