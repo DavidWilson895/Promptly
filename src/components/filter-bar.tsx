@@ -94,10 +94,8 @@ export function FilterBar({
 }) {
   return (
     <div className="flex flex-col gap-1">
+      {/* Browse + Trending */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="w-12 shrink-0 text-xs font-medium tracking-wide text-transparent select-none" aria-hidden="true">
-          Browse
-        </span>
         <Select
           value={sort}
           onValueChange={(value) => {
@@ -113,10 +111,6 @@ export function FilterBar({
             <SelectItem value="popular">Most liked</SelectItem>
           </SelectContent>
         </Select>
-      </div>
-
-      {/* Category */}
-      <div className="flex flex-wrap items-center gap-2">
         <span className="w-12 shrink-0 text-xs font-medium tracking-wide text-muted-foreground">
           Browse
         </span>
