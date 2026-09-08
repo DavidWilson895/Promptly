@@ -111,7 +111,7 @@ export default function HomePage() {
       </section>
 
       <main className="w-full px-4 pb-16 md:px-6 lg:px-8">
-        <div className="border-b bg-card -mx-4 px-4 py-4 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
+        <div className="sticky top-14 z-30 border-b bg-card -mx-4 px-4 py-3 shadow-sm md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
           <FilterBar
             search={search}
             onSearch={setSearch}
