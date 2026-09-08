@@ -87,36 +87,20 @@ export default function HomePage() {
   return (
     <div className="bg-muted/30">
       <section className="w-full px-4 pt-10 pb-8 md:px-6 lg:px-8 md:pt-12 md:pb-10">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
-              Prompt library · {PROMPTS.length} curated examples · Daily updates
-            </p>
-            <h1 className="mt-3 font-heading text-[2.2rem] font-normal leading-[0.95] tracking-tight text-balance md:text-5xl">
-              Collect prompts
-              <br />
-              <span className="font-heading italic font-normal">worth keeping.</span>
-            </h1>
-            <div className="mt-4 h-px w-12 bg-foreground/15" aria-hidden="true" />
-            <p className="mt-4 max-w-lg text-[15px] text-pretty leading-relaxed text-muted-foreground">
-              Each card pairs an image with the exact prompt that made it — tagged by
-              model and style so you can find what fits your tool and remix it in one click.
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-col items-start gap-3 lg:items-end">
-            <div className="flex items-center gap-2">
-              <span className="hidden h-7 items-center gap-1.5 rounded-full border bg-card px-3 text-xs text-muted-foreground md:inline-flex">
-                <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                {PROMPTS.length} prompts
-              </span>
-              <span className="inline-flex h-7 items-center rounded-full border bg-card px-3 text-xs text-muted-foreground">
-                Open any card → copy in one click
-              </span>
-            </div>
-            <p className="hidden text-xs text-muted-foreground md:block">
-              Filter by model, style, or category
-            </p>
-          </div>
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
+            Prompt library · {PROMPTS.length} curated examples · Daily updates
+          </p>
+          <h1 className="mx-auto mt-3 max-w-2xl font-heading text-[2.2rem] font-normal leading-[0.95] tracking-tight text-balance md:text-5xl">
+            Collect prompts
+            <br />
+            <span className="font-heading italic font-normal">worth keeping.</span>
+          </h1>
+          <div className="mx-auto mt-4 h-px w-12 bg-foreground/15" aria-hidden="true" />
+          <p className="mx-auto mt-4 max-w-xl text-[15px] text-pretty leading-relaxed text-muted-foreground">
+            Each card pairs an image with the exact prompt that made it — tagged by
+            model and style so you can find what fits your tool and remix it in one click.
+          </p>
         </div>
       </section>
 
