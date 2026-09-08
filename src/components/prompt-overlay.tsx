@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +31,15 @@ export function PromptOverlay({
   const [copied, setCopied] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
 
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
   if (!open || !prompt) return null;
   const item = prompt;
 
@@ -57,41 +66,20 @@ export function PromptOverlay({
     <div className="fixed inset-0 z-50 flex flex-col bg-white md:flex-row">
       {/* Image area */}
       <div className="relative flex flex-1 items-center justify-center bg-[#f6f6f4] p-4 md:p-8">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={item.image}
-          alt={item.title}
-          className="max-h-[56vh] w-auto max-w-full object-contain shadow-sm md:max-h-[88vh]"
-        />
-        <button
-          type="button"
-          onClick={() => onOpenChange(false)}
-          className="absolute left-4 top-4 hidden size-8 items-center justify-center rounded-full border bg-white text-muted-foreground shadow-sm hover:text-foreground md:inline-flex"
-          aria-label="Close"
-        >
-          <X className="size-4" />
-        </button>
-      </div>
-
-      {/* Right panel */}
-      <div className="flex w-full shrink-0 flex-col border-t bg-white md:w-[460px] md:border-l md:border-t-0">
-        {/* Top icon row */}
-        <div className="flex items-center justify-end gap-1.5 border-b px-3 py-2.5">
+        <div className="absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-1 rounded-full border bg-white px-1.5 py-1 shadow-sm">
           <Button
             variant="ghost"
             size="icon"
-            className="size-7 rounded-full border"
+            className="size-7 rounded-full border-0"
             onClick={() => setBookmarked((v) => !v)}
             aria-label={bookmarked ? "Remove bookmark" : "Bookmark"}
           >
-            <Bookmark
-              className={cn("size-3.5", bookmarked && "fill-foreground")}
-            />
+            <Bookmark className={cn("size-3.5", bookmarked && "fill-foreground")} />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="size-7 rounded-full border"
+            className="size-7 rounded-full border-0"
             aria-label="Download"
             onClick={() => {
               const a = document.createElement("a");
@@ -106,7 +94,7 @@ export function PromptOverlay({
           <Button
             variant="ghost"
             size="icon"
-            className="size-7 rounded-full border"
+            className="size-7 rounded-full border-0"
             aria-label="Share"
             onClick={async () => {
               try {
@@ -121,14 +109,23 @@ export function PromptOverlay({
           <Button
             variant="ghost"
             size="icon"
-            className="size-7 rounded-full border"
+            className="size-7 rounded-full border-0"
             onClick={() => onOpenChange(false)}
             aria-label="Close"
           >
             <X className="size-3.5" />
           </Button>
         </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={item.image}
+          alt={item.title}
+          className="max-h-[56vh] w-auto max-w-full object-contain shadow-sm md:max-h-[88vh]"
+        />
+      </div>
 
+      {/* Right panel */}
+      <div className="flex w-full shrink-0 flex-col border-t bg-white md:w-[520px] md:border-l md:border-t-0">
         <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-6">
           {/* Author row - placeholder */}
           <div className="flex items-center gap-2.5">
