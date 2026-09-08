@@ -81,18 +81,18 @@ export default function HomePage() {
 
   return (
     <div className="bg-muted/30">
-      <section id="hero" className="w-full px-4 pt-4 pb-4 md:px-6 lg:px-8 md:pt-6 md:pb-5">
+      <section id="hero" className="w-full px-4 pt-8 pb-8 md:px-6 lg:px-8 md:pt-10 md:pb-8">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
             Prompt library · {PROMPTS.length} curated examples · Daily updates
           </p>
-          <h1 className="mx-auto mt-2 max-w-2xl font-heading text-[2rem] font-normal leading-[0.95] tracking-tight text-balance md:text-[2.6rem]">
+          <h1 className="mx-auto mt-3 max-w-2xl font-heading text-[2.4rem] font-normal leading-[0.95] tracking-tight text-balance md:text-[3rem]">
             Collect prompts <span className="font-heading italic font-normal">worth keeping.</span>
           </h1>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-pretty leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-3 max-w-xl text-[15px] text-pretty leading-relaxed text-muted-foreground">
             Each card pairs an image with the exact prompt that made it — tagged by model and style.
           </p>
-          <div className="relative mx-auto mt-4 w-full max-w-xl">
+          <div className="relative mx-auto mt-6 w-full max-w-xl">
             <Search
               className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
