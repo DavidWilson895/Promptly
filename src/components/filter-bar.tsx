@@ -94,17 +94,20 @@ export function FilterBar({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex justify-end">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="w-12 shrink-0 text-xs font-medium tracking-wide text-transparent select-none" aria-hidden="true">
+          Browse
+        </span>
         <Select
           value={sort}
           onValueChange={(value) => {
             if (value) onSort(value as SortKey);
           }}
         >
-          <SelectTrigger className="h-8 w-full rounded-full border-transparent bg-muted pl-3 pr-2 text-sm sm:w-36" aria-label="Sort prompts">
+          <SelectTrigger className="h-7 rounded-full border-border/60 bg-card px-2.5 text-[13px] hover:bg-muted/50" aria-label="Sort prompts">
             <SelectValue placeholder="Sort" />
           </SelectTrigger>
-          <SelectContent align="end">
+          <SelectContent align="start">
             <SelectItem value="trending">Trending</SelectItem>
             <SelectItem value="latest">Latest</SelectItem>
             <SelectItem value="popular">Most liked</SelectItem>
@@ -114,7 +117,7 @@ export function FilterBar({
 
       {/* Category */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="shrink-0 text-xs font-medium tracking-wide text-muted-foreground">
+        <span className="w-12 shrink-0 text-xs font-medium tracking-wide text-muted-foreground">
           Browse
         </span>
         <div className="flex flex-wrap items-center gap-1.5">

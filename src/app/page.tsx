@@ -81,7 +81,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-muted/30">
-      <section id="hero" className="w-full px-4 pt-6 pb-6 md:px-6 lg:px-8 md:pt-8 md:pb-6">
+      <section id="hero" className="w-full px-4 pt-4 pb-4 md:px-6 lg:px-8 md:pt-6 md:pb-5">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
             Prompt library · {PROMPTS.length} curated examples · Daily updates
@@ -89,10 +89,10 @@ export default function HomePage() {
           <h1 className="mx-auto mt-2 max-w-2xl font-heading text-[2rem] font-normal leading-[0.95] tracking-tight text-balance md:text-[2.6rem]">
             Collect prompts <span className="font-heading italic font-normal">worth keeping.</span>
           </h1>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-pretty leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-2 max-w-xl text-sm text-pretty leading-relaxed text-muted-foreground">
             Each card pairs an image with the exact prompt that made it — tagged by model and style.
           </p>
-          <div className="relative mx-auto mt-5 w-full max-w-xl">
+          <div className="relative mx-auto mt-4 w-full max-w-xl">
             <Search
               className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
@@ -119,7 +119,7 @@ export default function HomePage() {
       </section>
 
       <main className="w-full px-4 pb-16 md:px-6 lg:px-8">
-        <div className="sticky top-14 z-30 border-b bg-card -mx-4 px-4 py-3 shadow-sm md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
+        <div className="sticky top-14 z-30 border-b bg-card -mx-4 px-4 py-2.5 shadow-sm md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
           <FilterBar
             model={model}
             onModel={setModel}
@@ -134,7 +134,7 @@ export default function HomePage() {
         </div>
 
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 pt-6 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          <div className="grid grid-cols-2 gap-3 pt-4 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {filtered.map((prompt) => (
               <PromptCard key={prompt.id} prompt={prompt} onOpen={openPrompt} />
             ))}
