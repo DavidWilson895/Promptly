@@ -18,10 +18,19 @@ export function Header() {
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 320);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const hero = document.getElementById("hero");
+    if (!hero) {
+      const onScroll = () => setScrolled(window.scrollY > 300);
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      return () => window.removeEventListener("scroll", onScroll);
+    }
+    const obs = new IntersectionObserver(
+      ([entry]) => setScrolled(!entry.isIntersecting),
+      { rootMargin: "-56px 0px 0px 0px", threshold: 0 }
+    );
+    obs.observe(hero);
+    return () => obs.disconnect();
   }, []);
 
   const showSearch = scrolled;
