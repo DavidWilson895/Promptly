@@ -2,7 +2,6 @@
 
 import { Search, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { FilterBar, type SortKey } from "@/components/filter-bar";
 import { useSearch } from "@/lib/search-context";
@@ -80,13 +79,6 @@ export default function HomePage() {
       window.removeEventListener("prompt:select", handler as EventListener);
   }, []);
 
-  function copyPrompt(prompt: Prompt) {
-    navigator.clipboard
-      .writeText(prompt.prompt)
-      .then(() => toast.success(`Copied`))
-      .catch(() => toast.error("Couldn't copy prompt"));
-  }
-
   return (
     <div className="bg-muted/30">
       <section id="hero" className="w-full px-4 pt-10 pb-8 md:px-6 lg:px-8 md:pt-12 md:pb-10">
@@ -148,12 +140,7 @@ export default function HomePage() {
         {filtered.length > 0 ? (
           <div className="grid grid-cols-2 gap-3 pt-6 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {filtered.map((prompt) => (
-              <PromptCard
-                key={prompt.id}
-                prompt={prompt}
-                onOpen={openPrompt}
-                onCopy={copyPrompt}
-              />
+              <PromptCard key={prompt.id} prompt={prompt} onOpen={openPrompt} />
             ))}
           </div>
         ) : (

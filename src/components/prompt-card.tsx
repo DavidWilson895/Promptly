@@ -1,16 +1,12 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Copy, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import type { Prompt } from "@/lib/data";
 
 export function PromptCard({
   prompt,
   onOpen,
-  onCopy,
 }: {
   prompt: Prompt;
   onOpen: (prompt: Prompt) => void;
-  onCopy: (prompt: Prompt) => void;
 }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/10">
@@ -43,7 +39,7 @@ export function PromptCard({
         </div>
       </button>
 
-      <div className="flex flex-1 flex-col gap-2 p-3.5">
+      <div className="flex flex-1 flex-col gap-2 p-3.5 pb-4">
         <button
           type="button"
           onClick={() => onOpen(prompt)}
@@ -54,24 +50,6 @@ export function PromptCard({
         <p className="line-clamp-2 text-xs text-pretty leading-relaxed text-muted-foreground">
           {prompt.prompt}
         </p>
-        <div className="mt-auto flex items-center justify-between gap-2 border-t border-border/40 pt-2.5">
-          <Badge
-            variant="outline"
-            className="rounded-full border-border/60 bg-muted/30 px-2 py-0 text-xs font-normal text-muted-foreground"
-          >
-            {prompt.category}
-          </Badge>
-          <Button
-            type="button"
-            size="icon"
-            variant="ghost"
-            className="size-7 shrink-0 rounded-full border border-transparent hover:border-border/60 hover:bg-muted/50"
-            onClick={() => onCopy(prompt)}
-            aria-label={`Copy prompt: ${prompt.title}`}
-          >
-            <Copy className="size-3.5" />
-          </Button>
-        </div>
       </div>
     </article>
   );
