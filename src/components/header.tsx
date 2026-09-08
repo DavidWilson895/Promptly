@@ -34,7 +34,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
-      <div className="flex h-14 w-full items-center gap-4 px-4 md:px-6 lg:px-8">
+      <div className="relative flex h-14 w-full items-center gap-4 px-4 md:px-6 lg:px-8">
         <div className="flex shrink-0 items-center gap-6">
           <Link
             href="/"
@@ -58,27 +58,27 @@ export function Header() {
 
         <div
           className={cn(
-            "hidden flex-1 justify-center transition-all duration-300 md:flex",
+            "absolute left-1/2 top-1/2 hidden w-full max-w-xl -translate-x-1/2 -translate-y-1/2 px-4 transition-all duration-300 md:flex",
             scrolled ? "opacity-100" : "pointer-events-none opacity-0"
           )}
         >
-          <div className="relative w-full max-w-md">
+          <div className="relative w-full">
             <Search
-              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
             />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search prompts, models, styles…"
-              className="h-8 rounded-full border-transparent bg-muted pl-9 pr-8 text-sm placeholder:text-muted-foreground/70 focus-visible:bg-background"
+              className="h-11 rounded-full border-border/60 bg-white pl-11 pr-10 text-sm shadow-sm placeholder:text-muted-foreground/70"
               aria-label="Search prompts"
             />
             {search ? (
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:text-foreground"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-muted p-1.5 text-muted-foreground hover:text-foreground"
                 aria-label="Clear search"
               >
                 <X className="size-3.5" />
