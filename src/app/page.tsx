@@ -76,10 +76,52 @@ export default function HomePage() {
       window.removeEventListener("prompt:select", handler as EventListener);
   }, []);
 
+  useEffect(() => {
+    let effect: { destroy: () => void } | null = null;
+    let cancelled = false;
+    const load = async () => {
+      if (typeof window === "undefined") return;
+      const loadScript = (src: string) =>
+        new Promise<void>((resolve, reject) => {
+          if (document.querySelector(`script[src="${src}"]`)) return resolve();
+          const s = document.createElement("script");
+          s.src = src;
+          s.onload = () => resolve();
+          s.onerror = () => reject(new Error(`Failed to load ${src}`));
+          document.body.appendChild(s);
+        });
+      try {
+        await loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js");
+        await loadScript("https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.fog.min.js");
+        if (cancelled) return;
+        const w = window as unknown as {
+          VANTA?: { FOG: (opts: Record<string, unknown>) => { destroy: () => void } };
+        };
+        if (w.VANTA?.FOG) {
+          effect = w.VANTA.FOG({
+            el: "#hero",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200,
+            minWidth: 200,
+          });
+        }
+      } catch {
+        // Vanta failed to load - hero stays with plain background
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+      if (effect) effect.destroy();
+    };
+  }, []);
+
   return (
     <div className="bg-muted/30">
-      <section id="hero" className="w-full px-4 pt-8 pb-12 md:px-6 lg:px-8 md:pt-10 md:pb-12">
-        <div className="mx-auto max-w-3xl text-center">
+      <section id="hero" className="relative w-full overflow-hidden px-4 pt-8 pb-12 md:px-6 lg:px-8 md:pt-10 md:pb-12">
+        <div className="relative mx-auto max-w-3xl text-center">
           <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
             Prompt library · {ALL_PROMPTS.length} curated examples · Daily updates
           </p>
