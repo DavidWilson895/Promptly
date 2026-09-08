@@ -46,8 +46,8 @@ export function Header() {
   return (
     <header className={cn("fixed top-0 left-0 right-0 z-40 border-b transition-all duration-500", headerBg)}>
 
-      <div className="relative flex h-14 w-full items-center gap-4 px-4 md:px-6 lg:px-8">
-        <div className="flex flex-1 items-center justify-center gap-6">
+      <div className="relative flex h-14 w-full items-center px-4 md:px-6 lg:px-8">
+        <div className="flex shrink-0 items-center gap-2">
           <Link
             href="/"
             className="flex items-center gap-2 text-base font-medium tracking-tight z-50 relative"
