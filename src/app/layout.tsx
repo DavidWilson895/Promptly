@@ -37,7 +37,7 @@ export default function RootLayout({
         <Header />
         {children}
         <footer className="border-t">
-          <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-6 text-sm text-muted-foreground md:px-6">
+          <div className="flex w-full items-center justify-between px-4 py-6 text-sm text-muted-foreground md:px-6 lg:px-8">
             <span>Promptly © {new Date().getFullYear()}</span>
             <span className="hidden sm:inline">
               Curated AI image prompts

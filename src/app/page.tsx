@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { FilterBar, type SortKey } from "@/components/filter-bar";
 import { PromptCard } from "@/components/prompt-card";
-import { PromptDetailSheet } from "@/components/prompt-detail-sheet";
+import { PromptOverlay } from "@/components/prompt-overlay";
 import {
   PROMPTS,
   type Category,
@@ -41,7 +41,7 @@ export default function HomePage() {
   const [style, setStyle] = useState<Style | null>(null);
   const [sort, setSort] = useState<SortKey>("trending");
   const [selected, setSelected] = useState<Prompt | null>(null);
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [overlayOpen, setOverlayOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -64,8 +64,18 @@ export default function HomePage() {
 
   function openPrompt(prompt: Prompt) {
     setSelected(prompt);
-    setSheetOpen(true);
+    setOverlayOpen(true);
   }
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<Prompt>).detail;
+      if (detail) setSelected(detail);
+    };
+    window.addEventListener("prompt:select", handler as EventListener);
+    return () =>
+      window.removeEventListener("prompt:select", handler as EventListener);
+  }, []);
 
   function copyPrompt(prompt: Prompt) {
     navigator.clipboard
@@ -76,7 +86,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-muted/30">
-      <section className="mx-auto w-full max-w-7xl px-4 pt-8 pb-6 md:px-6 md:pt-10">
+      <section className="w-full px-4 pt-8 pb-6 md:px-6 lg:px-8 md:pt-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
@@ -100,8 +110,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <main className="mx-auto w-full max-w-7xl px-4 pb-16 md:px-6">
-        <div className="rounded-xl border bg-card p-4 shadow-sm md:p-5">
+      <main className="w-full px-4 pb-16 md:px-6 lg:px-8">
+        <div className="border-b bg-card -mx-4 px-4 py-4 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
           <FilterBar
             search={search}
             onSearch={setSearch}
@@ -118,7 +128,7 @@ export default function HomePage() {
         </div>
 
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 pt-6 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 pt-6 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {filtered.map((prompt) => (
               <PromptCard
                 key={prompt.id}
@@ -150,10 +160,10 @@ export default function HomePage() {
         )}
       </main>
 
-      <PromptDetailSheet
+      <PromptOverlay
         prompt={selected}
-        open={sheetOpen}
-        onOpenChange={setSheetOpen}
+        open={overlayOpen}
+        onOpenChange={setOverlayOpen}
       />
     </div>
   );
