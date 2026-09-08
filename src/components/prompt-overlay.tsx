@@ -14,7 +14,10 @@ import {
   X,
 } from "lucide-react";
 import { PROMPTS, type Prompt } from "@/lib/data";
+import { REAL_PROMPTS } from "@/lib/data-real";
 import { cn } from "@/lib/utils";
+
+const ALL_FOR_RELATED: Prompt[] = [...REAL_PROMPTS, ...PROMPTS];
 
 export function PromptOverlay({
   prompt,
@@ -31,7 +34,7 @@ export function PromptOverlay({
   if (!open || !prompt) return null;
   const item = prompt;
 
-  const related = PROMPTS.filter((p) => p.id !== item.id).slice(0, 6);
+  const related = ALL_FOR_RELATED.filter((p) => p.id !== item.id).slice(0, 6);
 
   async function copyPrompt() {
     try {
@@ -71,7 +74,7 @@ export function PromptOverlay({
       </div>
 
       {/* Right panel */}
-      <div className="flex w-full shrink-0 flex-col border-t bg-white md:w-[380px] md:border-l md:border-t-0">
+      <div className="flex w-full shrink-0 flex-col border-t bg-white md:w-[460px] md:border-l md:border-t-0">
         {/* Top icon row */}
         <div className="flex items-center justify-end gap-1.5 border-b px-3 py-2.5">
           <Button
@@ -93,7 +96,8 @@ export function PromptOverlay({
             onClick={() => {
               const a = document.createElement("a");
               a.href = item.image;
-              a.download = `${item.id}.svg`;
+              const ext = item.image.split(".").pop() || "jpg";
+              a.download = `${item.id}.${ext}`;
               a.click();
             }}
           >
@@ -125,7 +129,7 @@ export function PromptOverlay({
           </Button>
         </div>
 
-        <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
+        <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-6">
           {/* Author row - placeholder */}
           <div className="flex items-center gap-2.5">
             <span className="flex size-8 items-center justify-center rounded-full bg-muted text-xs font-medium">
