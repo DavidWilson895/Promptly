@@ -1,11 +1,11 @@
 export const MODELS = [
   "GPT Image",
-  "Midjourney",
-  "Grok",
   "Nano Banana",
+  "Midjourney",
   "Seedance",
-  "Gemini Omni",
   "Kling",
+  "Gemini Omni",
+  "Grok",
   "MiniMax",
 ] as const;
 
@@ -20,12 +20,16 @@ export const CATEGORIES = [
 ] as const;
 
 export const STYLES = [
+  "Realistic",
+  "Filmic",
   "Editorial",
+  "Illustration",
+  "3D",
+  "Anime",
+  "Graphic",
+  "Retro",
   "Minimal",
   "Vintage",
-  "Realistic",
-  "Anime",
-  "3D",
   "Cinematic",
   "Surreal",
   "Storybook",

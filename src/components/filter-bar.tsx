@@ -21,6 +21,32 @@ import { cn } from "@/lib/utils";
 
 export type SortKey = "trending" | "latest" | "popular";
 
+const MODEL_LOGOS: Record<string, string> = {
+  "GPT Image": "/brand-logo/openai.svg",
+  Midjourney: "/brand-logo/midjourney.svg",
+  Grok: "/brand-logo/grok.svg",
+  "Nano Banana": "/brand-logo/nano-banana.svg",
+  Seedance: "/brand-logo/seedance.svg",
+  "Gemini Omni": "/brand-logo/gemini.svg",
+  Kling: "/brand-logo/kling.svg",
+  MiniMax: "/brand-logo/minimax.svg",
+};
+
+function ModelIcon({ model, className }: { model: string; className?: string }) {
+  const src = MODEL_LOGOS[model];
+  if (!src) return null;
+  // Midjourney needs currentColor for visibility on light bg
+  const isMonochrome = model === "Midjourney" || model === "Grok";
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      className={cn("size-4 shrink-0 object-contain", isMonochrome && "text-foreground", className)}
+    />
+  );
+}
+
 function Chip({
   active,
   onClick,
@@ -44,40 +70,6 @@ function Chip({
     >
       {children}
     </button>
-  );
-}
-
-function ChipRow({
-  label,
-  values,
-  selected,
-  onSelect,
-}: {
-  label: string;
-  values: readonly string[];
-  selected: string | null;
-  onSelect: (value: string | null) => void;
-}) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="w-20 shrink-0 text-xs font-medium text-muted-foreground">
-        {label}
-      </span>
-      <div className="flex flex-wrap items-center gap-1.5">
-        <Chip active={selected === null} onClick={() => onSelect(null)}>
-          All
-        </Chip>
-        {values.map((value) => (
-          <Chip
-            key={value}
-            active={selected === value}
-            onClick={() => onSelect(selected === value ? null : value)}
-          >
-            {value}
-          </Chip>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -150,25 +142,74 @@ export function FilterBar({
         </Select>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <ChipRow
-          label="Model"
-          values={MODELS}
-          selected={model}
-          onSelect={(v) => onModel(v as Model | null)}
-        />
-        <ChipRow
-          label="Category"
-          values={CATEGORIES}
-          selected={category}
-          onSelect={(v) => onCategory(v as Category | null)}
-        />
-        <ChipRow
-          label="Style"
-          values={STYLES}
-          selected={style}
-          onSelect={(v) => onStyle(v as Style | null)}
-        />
+      {/* Category stays as chips */}
+      <div className="flex items-center gap-3">
+        <span className="w-20 shrink-0 text-xs font-medium text-muted-foreground">
+          Category
+        </span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Chip active={category === null} onClick={() => onCategory(null)}>
+            All
+          </Chip>
+          {CATEGORIES.map((value) => (
+            <Chip
+              key={value}
+              active={category === value}
+              onClick={() => onCategory(category === value ? null : (value as Category))}
+            >
+              {value}
+            </Chip>
+          ))}
+        </div>
+      </div>
+
+      {/* Model + Style as dropdowns */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium text-muted-foreground">Model</span>
+          <Select
+            value={model ?? "All models"}
+            onValueChange={(v) => onModel(v === "All models" ? null : (v as Model))}
+          >
+            <SelectTrigger className="h-8 gap-2 rounded-full pl-2.5 pr-2 text-sm" aria-label="Filter by model">
+              <span className="inline-flex items-center gap-1.5">
+                {model ? <ModelIcon model={model} /> : null}
+                <SelectValue />
+              </span>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All models">All models</SelectItem>
+              {MODELS.map((m) => (
+                <SelectItem key={m} value={m}>
+                  <span className="inline-flex items-center gap-2">
+                    <ModelIcon model={m} />
+                    {m}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium text-muted-foreground">Style</span>
+          <Select
+            value={style ?? "All styles"}
+            onValueChange={(v) => onStyle(v === "All styles" ? null : (v as Style))}
+          >
+            <SelectTrigger className="h-8 rounded-full pl-2.5 pr-2 text-sm" aria-label="Filter by style">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All styles">All styles</SelectItem>
+              {STYLES.map((s) => (
+                <SelectItem key={s} value={s}>
+                  {s}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <p className="text-xs text-muted-foreground tabular-nums">
