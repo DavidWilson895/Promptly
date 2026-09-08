@@ -66,20 +66,20 @@ export function PromptOverlay({
     <div className="fixed inset-0 z-50 flex flex-col bg-white md:flex-row">
       {/* Image area */}
       <div className="relative flex flex-1 items-center justify-center bg-[#f6f6f4] p-4 md:p-8">
-        <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full border bg-white px-1.5 py-1 shadow-sm">
+        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full border bg-white px-2 py-1.5 shadow-sm">
           <Button
             variant="ghost"
             size="icon"
-            className="size-7 rounded-full border-0"
+            className="size-9 rounded-full border border-black/10 bg-white shadow-sm hover:bg-muted"
             onClick={() => setBookmarked((v) => !v)}
             aria-label={bookmarked ? "Remove bookmark" : "Bookmark"}
           >
-            <Bookmark className={cn("size-3.5", bookmarked && "fill-foreground")} />
+            <Bookmark className={cn("size-4", bookmarked && "fill-foreground")} />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="size-7 rounded-full border-0"
+            className="size-9 rounded-full border border-black/10 bg-white shadow-sm hover:bg-muted"
             aria-label="Download"
             onClick={() => {
               const a = document.createElement("a");
@@ -89,12 +89,12 @@ export function PromptOverlay({
               a.click();
             }}
           >
-            <Download className="size-3.5" />
+            <Download className="size-4" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="size-7 rounded-full border-0"
+            className="size-9 rounded-full border border-black/10 bg-white shadow-sm hover:bg-muted"
             aria-label="Share"
             onClick={async () => {
               try {
@@ -104,16 +104,16 @@ export function PromptOverlay({
               }
             }}
           >
-            <Share2 className="size-3.5" />
+            <Share2 className="size-4" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="size-7 rounded-full border-0"
+            className="size-9 rounded-full border border-black/10 bg-white shadow-sm hover:bg-muted"
             onClick={() => onOpenChange(false)}
             aria-label="Close"
           >
-            <X className="size-3.5" />
+            <X className="size-4" />
           </Button>
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
