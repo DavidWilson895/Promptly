@@ -9,18 +9,18 @@ export function PromptCard({
   onOpen: (prompt: Prompt) => void;
 }) {
   return (
-    <article className="group overflow-hidden rounded-xl border bg-card shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/10">
+    <article className="group break-inside-avoid overflow-hidden rounded-xl border bg-card shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/10">
       <button
         type="button"
         onClick={() => onOpen(prompt)}
-        className="relative block aspect-[4/5] w-full overflow-hidden bg-muted text-left"
+        className="relative block w-full overflow-hidden bg-muted text-left"
         aria-label={`View prompt: ${prompt.title}`}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={prompt.image}
           alt=""
-          className="size-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+          className="h-auto w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
         />
         <div className="absolute inset-0 ring-1 ring-black/5 group-hover:ring-black/10" aria-hidden="true" />
         <div className="absolute left-2.5 top-2.5 flex items-center gap-1.5">

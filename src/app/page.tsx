@@ -7,13 +7,10 @@ import { FilterBar, type SortKey } from "@/components/filter-bar";
 import { useSearch } from "@/lib/search-context";
 import { PromptCard } from "@/components/prompt-card";
 import { PromptOverlay } from "@/components/prompt-overlay";
-import {
-  PROMPTS,
-  type Category,
-  type Model,
-  type Prompt,
-  type Style,
-} from "@/lib/data";
+import { PROMPTS, type Category, type Model, type Prompt, type Style } from "@/lib/data";
+import { REAL_PROMPTS } from "@/lib/data-real";
+
+const ALL_PROMPTS: Prompt[] = [...REAL_PROMPTS, ...PROMPTS];
 
 function sortPrompts(prompts: Prompt[], sort: SortKey): Prompt[] {
   const now = Date.now();
@@ -47,7 +44,7 @@ export default function HomePage() {
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
-    const matches = PROMPTS.filter((prompt) => {
+    const matches = ALL_PROMPTS.filter((prompt) => {
       if (model && prompt.model !== model) return false;
       if (category && prompt.category !== category) return false;
       if (style && prompt.style !== style) return false;
@@ -84,7 +81,7 @@ export default function HomePage() {
       <section id="hero" className="w-full px-4 pt-8 pb-12 md:px-6 lg:px-8 md:pt-10 md:pb-12">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
-            Prompt library · {PROMPTS.length} curated examples · Daily updates
+            Prompt library · {ALL_PROMPTS.length} curated examples · Daily updates
           </p>
           <h1 className="mx-auto mt-3 max-w-2xl font-heading text-[2.4rem] font-normal leading-[0.95] tracking-tight text-balance md:text-[3rem]">
             Collect prompts <span className="font-heading italic font-normal">worth keeping.</span>
@@ -119,7 +116,7 @@ export default function HomePage() {
       </section>
 
       <main className="w-full px-4 pb-16 md:px-6 lg:px-8">
-        <div className="sticky top-14 z-30 border-b bg-card -mx-4 px-4 py-2.5 shadow-sm md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
+        <div className="sticky top-14 z-30 border-b bg-card -mx-4 px-4 py-2.5 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
           <FilterBar
             model={model}
             onModel={setModel}
@@ -134,7 +131,7 @@ export default function HomePage() {
         </div>
 
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 pt-4 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          <div className="columns-2 gap-3 space-y-3 pt-4 sm:gap-4 sm:space-y-4 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6">
             {filtered.map((prompt) => (
               <PromptCard key={prompt.id} prompt={prompt} onOpen={openPrompt} />
             ))}
