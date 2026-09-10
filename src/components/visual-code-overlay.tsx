@@ -130,14 +130,16 @@ export function VisualCodeOverlay({
         </div>
 
         {images.length > 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-5 p-4 md:p-8">
-            <img
-              src={images[active]}
-              alt={item.title}
-              className="max-h-[56vh] w-auto max-w-full rounded-lg object-contain shadow-sm md:max-h-[70vh]"
-            />
+          <div className="flex flex-1 flex-col">
+            <div className="flex min-h-0 flex-1 items-center justify-center p-4 pb-0 md:p-8 md:pb-0">
+              <img
+                src={images[active]}
+                alt={item.title}
+                className="max-h-[56vh] w-auto max-w-full rounded-lg object-contain shadow-sm md:max-h-[70vh]"
+              />
+            </div>
             {images.length > 1 ? (
-              <div className="flex flex-wrap justify-center gap-2">
+              <div className="flex shrink-0 flex-wrap justify-center gap-2 p-4 md:p-6">
                 {images.map((img, i) => (
                   <button
                     key={img}
