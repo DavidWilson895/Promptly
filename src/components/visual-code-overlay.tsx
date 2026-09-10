@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { Bookmark, Copy, Download, Heart, ImagePlus, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { VISUAL_CODES, type VisualCode } from "@/lib/visual-codes";
+import {
+  VISUAL_CODES,
+  categoryOf,
+  groupName,
+  type VisualCode,
+} from "@/lib/visual-codes";
 import { cn } from "@/lib/utils";
 
 export function VisualCodeOverlay({
@@ -89,9 +94,9 @@ export function VisualCodeOverlay({
             aria-label="Download"
             onClick={() => {
               const a = document.createElement("a");
-              a.href = images[active] ?? code.image;
-              const ext = (images[active] ?? code.image).split(".").pop() || "jpg";
-              a.download = `${code.id}.${ext}`;
+              a.href = images[active] ?? item.image;
+              const ext = (images[active] ?? item.image).split(".").pop() || "jpg";
+              a.download = `${item.id}.${ext}`;
               a.click();
             }}
           >
@@ -178,15 +183,17 @@ export function VisualCodeOverlay({
           <div>
             <div className="flex items-center gap-2.5">
               <span className="flex size-8 items-center justify-center rounded-full bg-muted text-xs font-medium">
-                {code.group.slice(0, 1)}
+                {groupName(item.group).slice(0, 1)}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium leading-none">{code.group}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">#{code.id}</p>
+                <p className="text-sm font-medium leading-none">{groupName(item.group)}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {categoryOf(item)} · #{item.id}
+                </p>
               </div>
             </div>
             <h2 className="mt-4 font-sans text-xl font-semibold tracking-tight">
-              {code.title}
+              {item.title}
             </h2>
           </div>
 
@@ -217,23 +224,26 @@ export function VisualCodeOverlay({
 
           {/* Code block */}
           <div className="rounded-lg border bg-muted/20 p-3.5">
-            <p className="font-mono text-sm leading-relaxed">{code.code}</p>
+            <p className="font-mono text-sm leading-relaxed">{item.code}</p>
           </div>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-1.5">
             <Badge variant="secondary" className="rounded-full text-xs font-normal">
-              {code.group}
+              {categoryOf(item)}
             </Badge>
             <Badge variant="secondary" className="rounded-full text-xs font-normal">
-              #{code.id}
+              {groupName(item.group)}
+            </Badge>
+            <Badge variant="secondary" className="rounded-full text-xs font-normal">
+              #{item.id}
             </Badge>
           </div>
 
           {/* More in this style */}
           {related.length > 0 ? (
             <div>
-              <h3 className="text-sm font-medium">More in {code.group}</h3>
+              <h3 className="text-sm font-medium">More in {groupName(item.group)}</h3>
               <div className="mt-3 grid grid-cols-2 gap-2">
                 {related.map((r) => {
                   const rimgs = r.images.length > 0 ? r.images : r.image ? [r.image] : [];

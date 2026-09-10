@@ -7,6 +7,61 @@ export type VisualCode = {
   images: string[];
 };
 
+export const VISUAL_CATEGORIES = [
+  "Modern & Graphic",
+  "Print & Vintage",
+  "Industrial & Technical",
+  "Editorial & Luxury",
+  "Collage & Underground",
+  "Neon & Digital",
+  "Cinematic & Photography",
+  "Historical & Cultural",
+  "Craft & Material",
+  "Experimental & Expression",
+] as const;
+
+export type VisualCategory = (typeof VISUAL_CATEGORIES)[number];
+
+const CATEGORY_BY_GROUP: Record<string, VisualCategory> = {
+  "Modernist Systems": "Modern & Graphic",
+  "Systematic & Swiss": "Modern & Graphic",
+  "Fine Art Movements": "Modern & Graphic",
+  "Print Imperfections": "Print & Vintage",
+  "Reproduction & Photostat": "Print & Vintage",
+  "Newspaper Publishing": "Print & Vintage",
+  "Industrial Brutalism": "Industrial & Technical",
+  "Industrial Technical": "Industrial & Technical",
+  "Map & Data": "Industrial & Technical",
+  "Editorial Fashion": "Editorial & Luxury",
+  "Luxury Culture": "Editorial & Luxury",
+  "Museum Institutional": "Editorial & Luxury",
+  "Collage Ephemera": "Collage & Underground",
+  "Zine Underground": "Collage & Underground",
+  "Archive & Documentation": "Collage & Underground",
+  "Nightlife Neon": "Neon & Digital",
+  "Digital Chrome Future": "Neon & Digital",
+  "Retro Digital": "Neon & Digital",
+  "Pixel & Game": "Neon & Digital",
+  "Cinematic Photography": "Cinematic & Photography",
+  "Motion Optical": "Cinematic & Photography",
+  "Historical Revival": "Historical & Cultural",
+  "Historical Glamour": "Historical & Cultural",
+  "Global Print Traditions": "Historical & Cultural",
+  "Folk Craft": "Craft & Material",
+  "Material Typography": "Craft & Material",
+  "Surreal Spatial": "Experimental & Expression",
+  "Street Activism": "Experimental & Expression",
+  "Sports Broadcast": "Experimental & Expression",
+};
+
+export function groupName(group: string): string {
+  return group.replace(/\s*\(.*\)$/, "").trim();
+}
+
+export function categoryOf(code: Pick<VisualCode, "group">): VisualCategory {
+  return CATEGORY_BY_GROUP[groupName(code.group)] ?? "Experimental & Expression";
+}
+
 export const VISUAL_CODES: VisualCode[] = [
   {
     id: "001",

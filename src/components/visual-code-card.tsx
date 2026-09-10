@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ImagePlus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { VisualCode } from "@/lib/visual-codes";
+import { categoryOf, groupName, type VisualCode } from "@/lib/visual-codes";
 
 export function VisualCodeCard({
   code,
@@ -44,7 +44,8 @@ export function VisualCodeCard({
       </div>
 
       <div>
-        <p className="text-sm font-medium leading-snug">{code.title}</p>
+        <p className="text-xs text-muted-foreground">{categoryOf(code)}</p>
+        <p className="mt-0.5 text-sm font-medium leading-snug">{code.title}</p>
         {images.length > 1 ? (
           <div className="mt-2 flex items-center gap-1.5">
             {images.map((img, i) => (

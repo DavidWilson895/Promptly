@@ -5,21 +5,18 @@ import { Check } from "lucide-react";
 
 import { VisualCodeCard } from "@/components/visual-code-card";
 import { VisualCodeOverlay } from "@/components/visual-code-overlay";
-import { VISUAL_CODES, type VisualCode } from "@/lib/visual-codes";
+import {
+  VISUAL_CATEGORIES,
+  VISUAL_CODES,
+  categoryOf,
+  type VisualCode,
+} from "@/lib/visual-codes";
 import { cn } from "@/lib/utils";
 
-const GROUPS = VISUAL_CODES.reduce<{ title: string; codes: VisualCode[] }[]>(
-  (acc, code) => {
-    const last = acc[acc.length - 1];
-    if (last && last.title === code.group) {
-      last.codes.push(code);
-    } else {
-      acc.push({ title: code.group, codes: [code] });
-    }
-    return acc;
-  },
-  []
-);
+const CATEGORIES = VISUAL_CATEGORIES.map((title) => ({
+  title,
+  codes: VISUAL_CODES.filter((c) => categoryOf(c) === title),
+}));
 
 export default function VisualCodePage() {
   const [active, setActive] = useState<string>("All");
@@ -27,9 +24,8 @@ export default function VisualCodePage() {
   const [overlayOpen, setOverlayOpen] = useState(false);
 
   const filtered = useMemo(() => {
-    if (active === "All") return { codes: VISUAL_CODES, groups: GROUPS };
-    const groups = GROUPS.filter((g) => g.title === active);
-    return { codes: groups.flatMap((g) => g.codes), groups };
+    if (active === "All") return VISUAL_CODES;
+    return CATEGORIES.find((c) => c.title === active)?.codes ?? [];
   }, [active]);
 
   function openCode(code: VisualCode) {
@@ -54,23 +50,23 @@ export default function VisualCodePage() {
           Event poster design codes
         </h1>
         <p className="max-w-2xl text-pretty text-[15px] leading-relaxed text-muted-foreground">
-          {VISUAL_CODES.length} rebuild codes across {GROUPS.length} style categories. Pick a category,
-          copy a line, attach your reference poster, and rebuild it in that visual language.
+          {VISUAL_CODES.length} rebuild codes across {VISUAL_CATEGORIES.length} categories. Pick a
+          category, copy a line, attach your reference poster, and rebuild it in that visual language.
         </p>
       </div>
 
       <div className="sticky top-14 z-30 -mx-6 border-b bg-card px-6 py-2.5 md:-mx-8 md:px-8 lg:-mx-10 lg:px-10">
         <div className="flex gap-2 overflow-x-auto pb-1">
           <Tab active={active} name="All" count={VISUAL_CODES.length} onSelect={setActive} />
-          {GROUPS.map((g) => (
+          {CATEGORIES.map((g) => (
             <Tab key={g.title} active={active} name={g.title} count={g.codes.length} onSelect={setActive} />
           ))}
         </div>
       </div>
 
-      {filtered.codes.length > 0 ? (
+      {filtered.length > 0 ? (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-          {filtered.codes.map((code) => (
+          {filtered.map((code) => (
             <VisualCodeCard key={code.id} code={code} onOpen={openCode} />
           ))}
         </div>
