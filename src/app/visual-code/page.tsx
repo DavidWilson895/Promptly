@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Check } from "lucide-react";
 
 import { VisualCodeCard } from "@/components/visual-code-card";
+import { VisualCodeOverlay } from "@/components/visual-code-overlay";
 import { VISUAL_CODES, type VisualCode } from "@/lib/visual-codes";
 import { cn } from "@/lib/utils";
 
@@ -22,12 +23,29 @@ const GROUPS = VISUAL_CODES.reduce<{ title: string; codes: VisualCode[] }[]>(
 
 export default function VisualCodePage() {
   const [active, setActive] = useState<string>("All");
+  const [selected, setSelected] = useState<VisualCode | null>(null);
+  const [overlayOpen, setOverlayOpen] = useState(false);
 
   const filtered = useMemo(() => {
     if (active === "All") return { codes: VISUAL_CODES, groups: GROUPS };
     const groups = GROUPS.filter((g) => g.title === active);
     return { codes: groups.flatMap((g) => g.codes), groups };
   }, [active]);
+
+  function openCode(code: VisualCode) {
+    setSelected(code);
+    setOverlayOpen(true);
+  }
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<VisualCode>).detail;
+      if (detail) setSelected(detail);
+    };
+    window.addEventListener("visual-code:select", handler as EventListener);
+    return () =>
+      window.removeEventListener("visual-code:select", handler as EventListener);
+  }, []);
 
   return (
     <main className="flex w-full flex-col gap-10 px-6 py-24 pb-16 md:px-8 lg:px-10 md:py-28">
@@ -53,12 +71,18 @@ export default function VisualCodePage() {
       {filtered.codes.length > 0 ? (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {filtered.codes.map((code) => (
-            <VisualCodeCard key={code.id} code={code} />
+            <VisualCodeCard key={code.id} code={code} onOpen={openCode} />
           ))}
         </div>
       ) : (
         <p className="py-12 text-center text-sm text-muted-foreground">No codes in this category.</p>
       )}
+
+      <VisualCodeOverlay
+        code={selected}
+        open={overlayOpen}
+        onOpenChange={setOverlayOpen}
+      />
     </main>
   );
 }

@@ -6,27 +6,22 @@ import { ImagePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { VisualCode } from "@/lib/visual-codes";
 
-export function VisualCodeCard({ code }: { code: VisualCode }) {
-  const [copied, setCopied] = useState(false);
+export function VisualCodeCard({
+  code,
+  onOpen,
+}: {
+  code: VisualCode;
+  onOpen: (code: VisualCode) => void;
+}) {
   const [active, setActive] = useState(0);
 
   const images = code.images.length > 0 ? code.images : code.image ? [code.image] : [];
   const src = images[active] ?? "";
 
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(code.code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1400);
-    } catch {
-      // clipboard unavailable - ignore
-    }
-  }
-
   return (
     <div
       className="group relative flex flex-col gap-3 rounded-xl border bg-card p-3 transition-colors hover:border-foreground/30 hover:bg-muted/40"
-      onClick={() => void copy()}
+      onClick={() => onOpen(code)}
     >
       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-muted">
         {src ? (
@@ -46,11 +41,6 @@ export function VisualCodeCard({ code }: { code: VisualCode }) {
         <span className="absolute left-2 top-2 rounded-md bg-background/85 px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground backdrop-blur">
           #{code.id}
         </span>
-        {copied ? (
-          <span className="absolute right-2 top-2 rounded-md bg-foreground px-1.5 py-0.5 text-[11px] font-medium text-background">
-            Copied
-          </span>
-        ) : null}
       </div>
 
       <div>
@@ -74,12 +64,7 @@ export function VisualCodeCard({ code }: { code: VisualCode }) {
                 title={`Reference ${i + 1}`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={img}
-                  alt=""
-                  loading="lazy"
-                  className="h-full w-full object-cover"
-                />
+                <img src={img} alt="" loading="lazy" className="h-full w-full object-cover" />
               </button>
             ))}
             <span className="ml-auto text-[11px] tabular-nums text-muted-foreground">
@@ -87,8 +72,9 @@ export function VisualCodeCard({ code }: { code: VisualCode }) {
             </span>
           </div>
         ) : null}
-        <p className="mt-1 truncate font-mono text-xs text-muted-foreground transition-colors group-hover:text-foreground">
-          {code.code}
+        <p className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 font-mono text-[11px] text-muted-foreground">
+          <ImagePlus className="size-3" aria-hidden="true" />
+          Copy code
         </p>
       </div>
     </div>
