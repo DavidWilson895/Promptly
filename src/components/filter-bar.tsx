@@ -77,8 +77,6 @@ export function FilterBar({
       {/* Model + Style + count */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/40 pt-2">
         <div className="flex flex-wrap items-center gap-2">
-          <ModeSwitch />
-
           <div className="flex items-center gap-1.5">
             <Select
               value={model ?? "All models"}
@@ -123,6 +121,8 @@ export function FilterBar({
             </Select>
           </div>
         </div>
+
+        <ModeSwitch />
 
         <div className="flex items-center gap-1.5">
           <button
