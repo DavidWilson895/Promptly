@@ -1,29 +1,32 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import { Image as ImageIcon, FileCode2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+export type ViewMode = "image" | "code";
+
 const MODES = [
-  { key: "/", label: "Image prompt", icon: ImageIcon },
-  { key: "/visual-code", label: "Visual code", icon: FileCode2 },
+  { key: "image", label: "Image prompt", icon: ImageIcon },
+  { key: "code", label: "Visual code", icon: FileCode2 },
 ] as const;
 
-export function ModeSwitch() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const active = pathname === "/visual-code" ? "/visual-code" : "/";
-
+export function ModeSwitch({
+  value,
+  onChange,
+}: {
+  value: ViewMode;
+  onChange: (value: ViewMode) => void;
+}) {
   return (
     <div className="relative inline-flex items-center rounded-full border border-border/60 bg-card p-0.5">
       {MODES.map((mode) => {
         const Icon = mode.icon;
-        const isActive = active === mode.key;
+        const isActive = value === mode.key;
         return (
           <button
             key={mode.key}
             type="button"
-            onClick={() => router.push(mode.key)}
+            onClick={() => onChange(mode.key)}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors",
               isActive

@@ -66,9 +66,6 @@ export function Header() {
           <Link href="/" className={navLink}>
             Explore
           </Link>
-          <Link href="/visual-code" className={navLink}>
-            Visual code
-          </Link>
           <Link href="/my-library" className={navLink}>
             My Library
           </Link>

@@ -16,7 +16,6 @@ import {
 } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { CategoryTabs } from "@/components/category-tabs";
-import { ModeSwitch } from "@/components/mode-switch";
 
 export type SortKey = "trending" | "latest" | "popular";
 
@@ -121,8 +120,6 @@ export function FilterBar({
             </Select>
           </div>
         </div>
-
-        <ModeSwitch />
 
         <div className="flex items-center gap-1.5">
           <button
