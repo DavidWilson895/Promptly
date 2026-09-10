@@ -5,6 +5,7 @@ import { Check } from "lucide-react";
 
 import { VisualCodeCard } from "@/components/visual-code-card";
 import { VisualCodeOverlay } from "@/components/visual-code-overlay";
+import { ModeSwitch } from "@/components/mode-switch";
 import {
   VISUAL_CATEGORIES,
   VISUAL_CODES,
@@ -56,6 +57,12 @@ export default function VisualCodePage() {
       </div>
 
       <div className="sticky top-14 z-30 -mx-6 border-b bg-card px-6 py-2.5 md:-mx-8 md:px-8 lg:-mx-10 lg:px-10">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 pb-2.5">
+          <ModeSwitch />
+          <span className="text-xs tabular-nums text-muted-foreground">
+            {filtered.length} of {VISUAL_CODES.length} codes
+          </span>
+        </div>
         <div className="flex gap-2 overflow-x-auto pb-1">
           <Tab active={active} name="All" count={VISUAL_CODES.length} onSelect={setActive} />
           {CATEGORIES.map((g) => (

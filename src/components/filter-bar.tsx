@@ -16,6 +16,7 @@ import {
 } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { CategoryTabs } from "@/components/category-tabs";
+import { ModeSwitch } from "@/components/mode-switch";
 
 export type SortKey = "trending" | "latest" | "popular";
 
@@ -76,6 +77,8 @@ export function FilterBar({
       {/* Model + Style + count */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/40 pt-2">
         <div className="flex flex-wrap items-center gap-2">
+          <ModeSwitch />
+
           <div className="flex items-center gap-1.5">
             <Select
               value={model ?? "All models"}
