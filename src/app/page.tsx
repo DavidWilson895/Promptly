@@ -9,25 +9,18 @@ import { PromptCard } from "@/components/prompt-card";
 import { PromptOverlay } from "@/components/prompt-overlay";
 import { VisualCodeCard } from "@/components/visual-code-card";
 import { VisualCodeOverlay } from "@/components/visual-code-overlay";
-import { VisualCodeTabs } from "@/components/visual-code-tabs";
-import { ModeSwitch, type ViewMode } from "@/components/mode-switch";
 import { Highlighter } from "@/registry/magicui/highlighter";
 import { type Category, type Model, type Prompt, type Style } from "@/lib/data";
 import { REAL_PROMPTS } from "@/lib/data-real";
 import { UPLOADED_PROMPTS } from "@/lib/data-upload";
 import {
   VISUAL_CODES,
-  VISUAL_CATEGORIES,
   categoryOf,
   type VisualCode,
 } from "@/lib/visual-codes";
+import type { ViewMode } from "@/components/mode-switch";
 
 const ALL_PROMPTS: Prompt[] = [...UPLOADED_PROMPTS, ...REAL_PROMPTS];
-
-const CODE_CATEGORIES = VISUAL_CATEGORIES.map((title) => ({
-  title,
-  codes: VISUAL_CODES.filter((c) => categoryOf(c) === title),
-}));
 
 function sortPrompts(prompts: Prompt[], sort: SortKey): Prompt[] {
   const now = Date.now();
@@ -84,7 +77,7 @@ export default function HomePage() {
 
   const filteredCodes = useMemo(() => {
     if (codeCat === "All") return VISUAL_CODES;
-    return CODE_CATEGORIES.find((c) => c.title === codeCat)?.codes ?? [];
+    return VISUAL_CODES.filter((c) => categoryOf(c) === codeCat);
   }, [codeCat]);
 
   function openPrompt(prompt: Prompt) {
@@ -204,33 +197,22 @@ export default function HomePage() {
 
       <main className="w-full px-6 pb-16 md:px-8 lg:px-10">
         <div className="sticky top-14 z-30 border-b bg-card -mx-6 px-6 py-2.5 md:-mx-8 md:px-8 lg:-mx-10 lg:px-10">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 pb-2.5">
-            <ModeSwitch value={mode} onChange={setMode} />
-            <span className="text-xs tabular-nums text-muted-foreground">
-              {mode === "image"
-                ? `${filtered.length} prompts`
-                : `${filteredCodes.length} of ${VISUAL_CODES.length} codes`}
-            </span>
-          </div>
-          <div>
-            {mode === "image" ? (
-              <FilterBar
-                model={model}
-                onModel={setModel}
-                category={category}
-                onCategory={setCategory}
-                style={style}
-                onStyle={setStyle}
-                sort={sort}
-                onSort={setSort}
-                resultCount={filtered.length}
-              />
-            ) : (
-              <div className="pt-2">
-                <VisualCodeTabs active={codeCat} onSelect={setCodeCat} />
-              </div>
-            )}
-          </div>
+          <FilterBar
+            mode={mode}
+            onMode={setMode}
+            model={model}
+            onModel={setModel}
+            category={category}
+            onCategory={setCategory}
+            style={style}
+            onStyle={setStyle}
+            sort={sort}
+            onSort={setSort}
+            codeCat={codeCat}
+            onCodeCat={setCodeCat}
+            codeResultCount={filteredCodes.length}
+            totalCodeCount={VISUAL_CODES.length}
+          />
         </div>
 
         {mode === "image" ? (
