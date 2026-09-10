@@ -4,20 +4,33 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Bookmark,
   Check,
+  ChevronDown,
   Copy,
   Download,
   Eye,
+  FileCode2,
   Heart,
+  LayoutTemplate,
+  Link2,
   Share2,
+  Sparkles,
   X,
 } from "lucide-react";
-import { PROMPTS, type Prompt } from "@/lib/data";
+import { type Prompt } from "@/lib/data";
 import { REAL_PROMPTS } from "@/lib/data-real";
+import { UPLOADED_PROMPTS } from "@/lib/data-upload";
 import { cn } from "@/lib/utils";
 
-const ALL_FOR_RELATED: Prompt[] = [...REAL_PROMPTS, ...PROMPTS];
+const ALL_FOR_RELATED: Prompt[] = [...UPLOADED_PROMPTS, ...REAL_PROMPTS];
 
 export function PromptOverlay({
   prompt,
@@ -30,27 +43,40 @@ export function PromptOverlay({
 }) {
   const [copied, setCopied] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
+  const [loved, setLoved] = useState(false);
+  const [pop, setPop] = useState(false);
 
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onOpenChange(false);
+    };
+    window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [open, onOpenChange]);
+
+  function toggleLove() {
+    setLoved((v) => !v);
+    setPop(true);
+    setTimeout(() => setPop(false), 320);
+  }
 
   if (!open || !prompt) return null;
   const item = prompt;
 
   const related = ALL_FOR_RELATED.filter((p) => p.id !== item.id).slice(0, 6);
 
-  async function copyPrompt() {
+  async function copyPrompt(text = item.prompt) {
     try {
-      await navigator.clipboard.writeText(item.prompt);
+      await navigator.clipboard.writeText(text);
     } catch {
       const ta = document.createElement("textarea");
-      ta.value = item.prompt;
+      ta.value = text;
       ta.style.position = "fixed";
       ta.style.opacity = "0";
       document.body.appendChild(ta);
@@ -62,6 +88,13 @@ export function PromptOverlay({
     setTimeout(() => setCopied(false), 1600);
   }
 
+  const copyMarkdown = () => copyPrompt(`**${item.title}**\n\n${item.prompt}`);
+
+  const openWith = (url: string) => {
+    void copyPrompt();
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-white md:flex-row">
       {/* Image area */}
@@ -70,16 +103,16 @@ export function PromptOverlay({
           <Button
             variant="ghost"
             size="icon"
-            className="size-9 rounded-full border border-black/10 bg-white shadow-sm hover:bg-muted"
+            className="size-11 rounded-full border border-black/10 bg-white shadow-sm transition-all hover:scale-105 hover:bg-muted hover:shadow-md active:scale-95"
             onClick={() => setBookmarked((v) => !v)}
             aria-label={bookmarked ? "Remove bookmark" : "Bookmark"}
           >
-            <Bookmark className={cn("size-4", bookmarked && "fill-foreground")} />
+            <Bookmark className={cn("size-5", bookmarked && "fill-foreground")} />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="size-9 rounded-full border border-black/10 bg-white shadow-sm hover:bg-muted"
+            className="size-11 rounded-full border border-black/10 bg-white shadow-sm transition-all hover:scale-105 hover:bg-muted hover:shadow-md active:scale-95"
             aria-label="Download"
             onClick={() => {
               const a = document.createElement("a");
@@ -89,12 +122,12 @@ export function PromptOverlay({
               a.click();
             }}
           >
-            <Download className="size-4" />
+            <Download className="size-5" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="size-9 rounded-full border border-black/10 bg-white shadow-sm hover:bg-muted"
+            className="size-11 rounded-full border border-black/10 bg-white shadow-sm transition-all hover:scale-105 hover:bg-muted hover:shadow-md active:scale-95"
             aria-label="Share"
             onClick={async () => {
               try {
@@ -104,16 +137,38 @@ export function PromptOverlay({
               }
             }}
           >
-            <Share2 className="size-4" />
+            <Share2 className="size-5" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="size-9 rounded-full border border-black/10 bg-white shadow-sm hover:bg-muted"
-            onClick={() => onOpenChange(false)}
-            aria-label="Close"
+            onClick={toggleLove}
+            className={cn(
+              "size-11 rounded-full border shadow-sm transition-all hover:scale-105 hover:shadow-md active:scale-95",
+              loved
+                ? "border-pink-200 bg-pink-50 text-pink-600 hover:bg-pink-100"
+                : "border-black/10 bg-white hover:bg-pink-50 hover:border-pink-200 hover:text-pink-600"
+            )}
+            aria-label={loved ? "Unlike" : "Love this"}
+            aria-pressed={loved}
           >
-            <X className="size-4" />
+            <Heart
+              className={cn(
+                "size-5 transition-all duration-300",
+                loved && "fill-pink-500 text-pink-500",
+                pop && "animate-[ping_320ms_cubic-bezier(0,0,0.2,1)] scale-125",
+                !loved && "group-hover:fill-pink-200"
+              )}
+            />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-11 rounded-full border border-black/10 bg-white shadow-sm transition-all hover:scale-105 hover:bg-muted hover:shadow-md active:scale-95"
+            onClick={() => onOpenChange(false)}
+            aria-label="Close (Esc)"
+          >
+            <X className="size-5" />
           </Button>
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -160,19 +215,83 @@ export function PromptOverlay({
               <span className="size-2 rounded-full bg-foreground" aria-hidden="true" />
               {item.model}
             </Badge>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-7 gap-1.5 rounded-full text-xs"
-              onClick={copyPrompt}
-            >
-              {copied ? (
-                <Check className="size-3" aria-hidden="true" />
-              ) : (
-                <Copy className="size-3" aria-hidden="true" />
-              )}
-              {copied ? "Copied" : "Copy Prompt"}
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 gap-1.5 rounded-full text-xs"
+                  >
+                    {copied ? (
+                      <Check className="size-3" aria-hidden="true" />
+                    ) : (
+                      <Copy className="size-3" aria-hidden="true" />
+                    )}
+                    {copied ? "Copied" : "Copy Prompt"}
+                    <ChevronDown className="size-3 opacity-60" aria-hidden="true" />
+                  </Button>
+                }
+              >
+                Copy prompt
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={6} className="w-56">
+                <DropdownMenuItem onClick={() => copyMarkdown()}>
+                  <Eye className="size-4" aria-hidden="true" />
+                  View as markdown
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => copyMarkdown()}>
+                  <FileCode2 className="size-4" aria-hidden="true" />
+                  Copy as markdown
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem onClick={() => openWith("https://v0.dev")}>
+                  <Sparkles className="size-4" aria-hidden="true" />
+                  Open in v0
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => openWith("https://claude.ai")}>
+                  <Sparkles className="size-4" aria-hidden="true" />
+                  Open in Claude
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => openWith("https://bolt.new")}>
+                  <Sparkles className="size-4" aria-hidden="true" />
+                  Open in Bolt
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => openWith("https://lovable.dev")}>
+                  <Sparkles className="size-4" aria-hidden="true" />
+                  Open in Lovable
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => openWith("https://cursor.com")}>
+                  <Sparkles className="size-4" aria-hidden="true" />
+                  Open in Cursor
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => openWith("https://chatgpt.com")}>
+                  <Sparkles className="size-4" aria-hidden="true" />
+                  Open in ChatGPT
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => openWith("https://www.perplexity.ai")}>
+                  <Sparkles className="size-4" aria-hidden="true" />
+                  Open in Perplexity
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => openWith("https://gemini.google.com")}>
+                  <Sparkles className="size-4" aria-hidden="true" />
+                  Open in Gemini
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem onClick={() => openWith("https://figma.com")}>
+                  <LayoutTemplate className="size-4" aria-hidden="true" />
+                  Open in Figma
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => openWith("https://gist.github.com")}>
+                  <Link2 className="size-4" aria-hidden="true" />
+                  Create GitHub Gist
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Prompt */}
@@ -232,14 +351,48 @@ export function PromptOverlay({
 
         {/* Bottom actions */}
         <div className="flex gap-2 border-t p-3">
-          <Button className="flex-1 gap-1.5 rounded-full" onClick={copyPrompt}>
-            <Copy className="size-3.5" aria-hidden="true" />
-            Use this prompt
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button className="flex-1 gap-1.5 rounded-full">
+                  <Copy className="size-3.5" aria-hidden="true" />
+                  Use this prompt
+                  <ChevronDown className="size-3.5 opacity-60" aria-hidden="true" />
+                </Button>
+              }
+            >
+              Use this prompt
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" sideOffset={6} className="w-56">
+              <DropdownMenuItem onClick={() => copyPrompt()}>
+                <Copy className="size-4" aria-hidden="true" />
+                Copy prompt
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => copyMarkdown()}>
+                <FileCode2 className="size-4" aria-hidden="true" />
+                Copy as markdown
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem onClick={() => openWith("https://claude.ai")}>
+                <Sparkles className="size-4" aria-hidden="true" />
+                Open in Claude
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => openWith("https://chatgpt.com")}>
+                <Sparkles className="size-4" aria-hidden="true" />
+                Open in ChatGPT
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => openWith("https://gemini.google.com")}>
+                <Sparkles className="size-4" aria-hidden="true" />
+                Open in Gemini
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             variant="outline"
             className="flex-1 gap-1.5 rounded-full"
-            onClick={copyPrompt}
+            onClick={() => copyMarkdown()}
           >
             Use as reference
           </Button>

@@ -8,7 +8,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  CATEGORIES,
   MODELS,
   STYLES,
   type Category,
@@ -16,6 +15,7 @@ import {
   type Style,
 } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { CategoryTabs } from "@/components/category-tabs";
 
 export type SortKey = "trending" | "latest" | "popular";
 
@@ -45,32 +45,6 @@ function ModelIcon({ model, className }: { model: string; className?: string }) 
   );
 }
 
-function Chip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "inline-flex shrink-0 items-center rounded-full border px-3 py-1 text-[13px] whitespace-nowrap",
-        "transition-all duration-150",
-        active
-          ? "border-transparent bg-foreground text-background shadow-sm"
-          : "border-border/60 bg-card text-muted-foreground hover:border-foreground/15 hover:bg-muted/50 hover:text-foreground"
-      )}
-    >
-      {children}
-    </button>
-  );
-}
-
 export function FilterBar({
   model,
   onModel,
@@ -94,54 +68,20 @@ export function FilterBar({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      {/* Browse + Trending */}
+      {/* Categories */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="w-12 shrink-0 text-xs font-medium tracking-wide text-muted-foreground">
-          Browse
-        </span>
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Chip active={category === null} onClick={() => onCategory(null)}>
-            All
-          </Chip>
-          {CATEGORIES.map((value) => (
-            <Chip
-              key={value}
-              active={category === value}
-              onClick={() => onCategory(category === value ? null : (value as Category))}
-            >
-              {value}
-            </Chip>
-          ))}
-        </div>
-        <div className="ml-auto">
-          <Select
-            value={sort}
-            onValueChange={(value) => {
-              if (value) onSort(value as SortKey);
-            }}
-          >
-            <SelectTrigger className="h-7 rounded-full border-border/60 bg-card px-2.5 text-[13px] hover:bg-muted/50" aria-label="Sort prompts">
-              <SelectValue placeholder="Sort" />
-            </SelectTrigger>
-            <SelectContent align="end">
-              <SelectItem value="trending">Trending</SelectItem>
-              <SelectItem value="latest">Latest</SelectItem>
-              <SelectItem value="popular">Most liked</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <CategoryTabs value={category} onChange={onCategory} />
       </div>
 
       {/* Model + Style + count */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/40 pt-2">
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1.5">
-            <span className="text-xs font-medium tracking-wide text-muted-foreground">Model</span>
             <Select
               value={model ?? "All models"}
               onValueChange={(v) => onModel(v === "All models" ? null : (v as Model))}
             >
-              <SelectTrigger className="h-7 gap-1.5 rounded-full border-border/60 bg-card px-2.5 text-[13px] hover:bg-muted/50" aria-label="Filter by model">
+              <SelectTrigger className="h-7 gap-1.5 rounded-full border-border/60 bg-card px-2.5 text-[15px] hover:bg-muted/50" aria-label="Filter by model">
                 <span className="inline-flex items-center gap-1.5">
                   {model ? <ModelIcon model={model} /> : null}
                   <SelectValue />
@@ -162,12 +102,11 @@ export function FilterBar({
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="text-xs font-medium tracking-wide text-muted-foreground">Style</span>
             <Select
               value={style ?? "All styles"}
               onValueChange={(v) => onStyle(v === "All styles" ? null : (v as Style))}
             >
-              <SelectTrigger className="h-7 rounded-full border-border/60 bg-card px-2.5 text-[13px] hover:bg-muted/50" aria-label="Filter by style">
+              <SelectTrigger className="h-7 rounded-full border-border/60 bg-card px-2.5 text-[15px] hover:bg-muted/50" aria-label="Filter by style">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -182,9 +121,41 @@ export function FilterBar({
           </div>
         </div>
 
-        <p className="text-xs text-muted-foreground tabular-nums">
-          {resultCount} {resultCount === 1 ? "prompt" : "prompts"} · <span className="hidden sm:inline">refined for your model</span>
-        </p>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => onSort("trending")}
+            className={cn(
+              "rounded-full px-2.5 py-1 text-[15px] transition-colors",
+              sort === "trending" ? "font-semibold text-foreground" : "text-muted-foreground hover:text-foreground"
+            )}
+            aria-pressed={sort === "trending"}
+          >
+            Trending
+          </button>
+          <button
+            type="button"
+            onClick={() => onSort("latest")}
+            className={cn(
+              "rounded-full px-2.5 py-1 text-[15px] transition-colors",
+              sort === "latest" ? "font-semibold text-foreground" : "text-muted-foreground hover:text-foreground"
+            )}
+            aria-pressed={sort === "latest"}
+          >
+            Latest
+          </button>
+          <button
+            type="button"
+            onClick={() => onSort("popular")}
+            className={cn(
+              "rounded-full px-2.5 py-1 text-[15px] transition-colors",
+              sort === "popular" ? "font-semibold text-foreground" : "text-muted-foreground hover:text-foreground"
+            )}
+            aria-pressed={sort === "popular"}
+          >
+            Popular
+          </button>
+        </div>
       </div>
     </div>
   );

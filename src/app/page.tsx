@@ -7,10 +7,12 @@ import { FilterBar, type SortKey } from "@/components/filter-bar";
 import { useSearch } from "@/lib/search-context";
 import { PromptCard } from "@/components/prompt-card";
 import { PromptOverlay } from "@/components/prompt-overlay";
-import { PROMPTS, type Category, type Model, type Prompt, type Style } from "@/lib/data";
+import { Highlighter } from "@/registry/magicui/highlighter";
+import { type Category, type Model, type Prompt, type Style } from "@/lib/data";
 import { REAL_PROMPTS } from "@/lib/data-real";
+import { UPLOADED_PROMPTS } from "@/lib/data-upload";
 
-const ALL_PROMPTS: Prompt[] = [...REAL_PROMPTS, ...PROMPTS];
+const ALL_PROMPTS: Prompt[] = [...UPLOADED_PROMPTS, ...REAL_PROMPTS];
 
 function sortPrompts(prompts: Prompt[], sort: SortKey): Prompt[] {
   const now = Date.now();
@@ -120,16 +122,15 @@ export default function HomePage() {
 
   return (
     <div className="bg-muted/30">
-      <section id="hero" className="relative w-full overflow-hidden px-4 pt-8 pb-12 md:px-6 lg:px-8 md:pt-10 md:pb-12">
+      <section id="hero" className="relative w-full overflow-hidden px-4 pt-[88px] pb-12 md:px-6 lg:px-8 md:pt-[104px] md:pb-12 bg-gradient-to-b from-orange-100 via-sky-100 to-transparent">
         <div className="relative mx-auto max-w-3xl text-center">
-          <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">
-            Prompt library · {ALL_PROMPTS.length} curated examples · Daily updates
-          </p>
-          <h1 className="mx-auto mt-3 max-w-2xl font-heading text-[2.4rem] font-normal leading-[0.95] tracking-tight text-balance md:text-[3rem]">
-            Collect prompts <span className="font-heading italic font-normal">worth keeping.</span>
+          <h1 className="mx-auto mt-3 max-w-2xl font-sans text-[2.7rem] font-semibold leading-[1.05] tracking-tight whitespace-normal text-balance break-words md:text-[3.4rem]">
+            Collect prompts <span className="font-sans italic font-semibold">worth keeping.</span>
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-[15px] text-pretty leading-relaxed text-muted-foreground">
-            Each card pairs an image with the exact prompt that made it — tagged by model and style.
+            Each card pairs an image with the{" "}
+            <Highlighter action="underline">exact prompt</Highlighter> that made it — tagged by{" "}
+            <Highlighter action="highlight">model and style</Highlighter>.
           </p>
           <div className="relative mx-auto mt-6 w-full max-w-xl">
             <Search
@@ -140,7 +141,7 @@ export default function HomePage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search prompts, models, styles…"
-              className="h-11 rounded-full border-border/60 bg-white pl-11 pr-10 text-sm shadow-sm placeholder:text-muted-foreground/70"
+              className="h-11 rounded-full border-border/60 bg-white pl-11 pr-10 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:ring-3"
               aria-label="Search prompts"
             />
             {search ? (
@@ -157,8 +158,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <main className="w-full px-4 pb-16 md:px-6 lg:px-8">
-        <div className="sticky top-14 z-30 border-b bg-card -mx-4 px-4 py-2.5 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
+      <main className="w-full px-6 pb-16 md:px-8 lg:px-10">
+        <div className="sticky top-14 z-30 border-b bg-card -mx-6 px-6 py-2.5 md:-mx-8 md:px-8 lg:-mx-10 lg:px-10">
           <FilterBar
             model={model}
             onModel={setModel}

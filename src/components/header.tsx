@@ -4,12 +4,14 @@ import Link from "next/link";
 import { Bookmark, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { LiquidMorphButton } from "@/components/liquid-morph-button";
+import { SignInDialog } from "@/components/sign-in-dialog";
 import { useSearch } from "@/lib/search-context";
 import { cn } from "@/lib/utils";
 
 const navLink = cn(
-  "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-muted-foreground",
-  "transition-colors duration-150 hover:text-foreground"
+  "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-[15px] font-bold text-black",
+  "transition-colors duration-150 hover:text-black/70"
 );
 
 export function Header() {
@@ -46,7 +48,7 @@ export function Header() {
   return (
     <header className={cn("fixed top-0 left-0 right-0 z-40 border-b transition-all duration-500", headerBg)}>
 
-      <div className="relative flex h-14 w-full items-center px-4 md:px-6 lg:px-8">
+      <div className="relative flex h-14 w-full items-center gap-4 px-6 md:px-8 lg:px-10">
         <div className="flex shrink-0 items-center gap-2">
           <Link
             href="/"
@@ -54,19 +56,23 @@ export function Header() {
             aria-label="Promptly home"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.svg" alt="Promptly" width={38} height={22} className="h-6 w-auto drop-shadow-sm" />
+            <img src="/logo.svg" alt="Promptly" width={28} height={28} className="h-7 w-auto rounded-md drop-shadow-sm" />
             <span className="hidden sm:inline text-foreground">Promptly</span>
           </Link>
 
-          <nav className="hidden items-center gap-1 sm:flex" aria-label="Main">
-            <Link href="/" className={navLink}>
-              Explore
-            </Link>
-            <Link href="/my-library" className={navLink}>
-              My Library
-            </Link>
-          </nav>
-        </div>
+          </div>
+
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 sm:flex" aria-label="Main">
+          <Link href="/" className={navLink}>
+            Explore
+          </Link>
+          <Link href="/visual-code" className={navLink}>
+            Visual code
+          </Link>
+          <Link href="/my-library" className={navLink}>
+            My Library
+          </Link>
+        </nav>
 
         <div className="flex flex-1 justify-end items-center">
           <div
@@ -78,23 +84,23 @@ export function Header() {
             <div
               className={cn(
                 "relative flex items-center transition-all duration-300",
-                expanded || search ? "w-64 md:w-80" : "w-10 md:w-48"
+                expanded || search ? "w-56 md:w-72" : "w-10 md:w-48"
               )}
             >
               {!expanded && !search ? (
                 <button
                   type="button"
                   onClick={() => setExpanded(true)}
-                  className="flex size-8 items-center justify-center rounded-full border border-orange-200 bg-orange-50 shadow-sm hover:bg-orange-100 hover:shadow md:h-8 md:w-full md:justify-start md:gap-2 md:px-3 md:py-0"
+                  className="flex size-9 items-center justify-center rounded-full border border-border/60 bg-card shadow-sm transition-colors hover:bg-muted hover:shadow md:h-9 md:w-full md:justify-start md:gap-2 md:px-3 md:py-0"
                   aria-label="Search"
                 >
-                  <Search className="size-4 shrink-0 text-orange-500" aria-hidden="true" />
-                  <span className="hidden text-sm text-orange-600 md:inline">Search</span>
+                  <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+                  <span className="hidden text-sm text-muted-foreground md:inline">Search</span>
                 </button>
               ) : (
                 <div className="relative w-full">
                   <Search
-                    className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-orange-500"
+                    className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                     aria-hidden="true"
                   />
                   <Input
@@ -105,7 +111,7 @@ export function Header() {
                       if (!search) setExpanded(false);
                     }}
                     placeholder="Search prompts, models, styles…"
-                    className="h-10 w-full rounded-full border-orange-200 bg-orange-50/90 pl-10 pr-10 text-sm text-foreground shadow-sm shadow-orange-200/30 placeholder:text-orange-400 focus-visible:border-orange-300 focus-visible:ring-2 focus-visible:ring-orange-200 focus-visible:ring-offset-0"
+                    className="h-9 w-full rounded-full border-border/60 bg-card pl-10 pr-10 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                     aria-label="Search prompts"
                   />
                   {search ? (
@@ -115,7 +121,7 @@ export function Header() {
                         setSearch("");
                         setExpanded(false);
                       }}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-600 hover:bg-orange-200"
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full bg-muted px-2 py-1 text-xs font-medium hover:bg-muted/80"
                       aria-label="Clear search"
                     >
                       Clear
@@ -141,12 +147,9 @@ export function Header() {
             <Bookmark className="size-4" aria-hidden="true" />
             <span className="sr-only">My Library</span>
           </Link>
-          <Link
-            href="/auth/sign-in"
-            className="rounded-md bg-foreground px-3 py-1.5 text-sm font-medium text-background transition-colors duration-150 hover:opacity-90"
-          >
-            Sign in
-          </Link>
+          <SignInDialog>
+            <LiquidMorphButton label="Sign in" padding="8px 16px" radius="10px" />
+          </SignInDialog>
         </div>
       </div>
     </header>

@@ -1,8 +1,12 @@
 @import "tailwindcss";
+@source "../../node_modules/preline/dist/*.js";
+@import "../../node_modules/preline/variants.css";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@plugin "@tailwindcss/forms";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant hover (&:hover);
 
 @theme inline {
   --color-background: var(--background);
@@ -37,6 +41,8 @@
   --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
+  --color-highlight-underline: var(--highlight-underline);
+  --color-highlight: var(--highlight-highlight);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
   --radius-sm: calc(var(--radius) * 0.6);
@@ -81,6 +87,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --highlight-underline: #FF9800;
+  --highlight-highlight: #87CEFA;
 }
 
 .dark {
@@ -115,6 +123,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --highlight-underline: #FFB86A;
+  --highlight-highlight: #7CC4F0;
 }
 
 @layer base {
