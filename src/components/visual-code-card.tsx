@@ -15,34 +15,43 @@ export function VisualCodeCard({
   const src = images[0] ?? "";
 
   return (
-    <div
-      className="group relative flex flex-col gap-2.5 rounded-xl border bg-card p-2.5 transition-colors hover:border-foreground/30 hover:bg-muted/40"
-      onClick={() => onOpen(code)}
-    >
-      <div className="relative w-full overflow-hidden rounded-lg bg-muted">
+    <article className="group break-inside-avoid overflow-hidden rounded-xl border bg-card shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/10">
+      <button
+        type="button"
+        onClick={() => onOpen(code)}
+        className="relative block w-full overflow-hidden bg-muted text-left"
+        aria-label={`View code: ${code.title}`}
+      >
         {src ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={src}
-            alt={code.title}
+            alt=""
             loading="lazy"
-            className="h-auto w-full object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+            className="h-auto w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="flex aspect-[3/4] w-full flex-col items-center justify-center gap-2 text-muted-foreground">
+          <div className="flex aspect-[3/4] w-full flex-col items-center justify-center gap-2 p-4 text-muted-foreground">
             <ImagePlus className="size-6" />
             <span className="text-xs">Ref image pending</span>
           </div>
         )}
-        <span className="absolute left-2 top-2 rounded-md bg-background/85 px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground backdrop-blur">
-          #{code.id}
-        </span>
+        <div className="absolute inset-0 ring-1 ring-black/5 group-hover:ring-black/10" aria-hidden="true" />
+        <div className="absolute left-2.5 top-2.5 flex items-center gap-1.5">
+          <span className="rounded-full border bg-white/95 px-2 py-1 text-[11px] font-medium tracking-wide text-foreground shadow-sm backdrop-blur">
+            #{code.id}
+          </span>
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-200 group-hover:bg-black/5 group-hover:opacity-100" aria-hidden="true">
+          <span className="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-foreground shadow-sm">
+            View code
+          </span>
+        </div>
+      </button>
+      <div className="px-3 py-2.5">
+        <p className="text-[11px] text-muted-foreground">{categoryOf(code)}</p>
+        <p className="mt-0.5 truncate text-sm font-medium leading-snug">{code.title}</p>
       </div>
-
-      <div>
-        <p className="text-xs text-muted-foreground">{categoryOf(code)}</p>
-        <p className="mt-0.5 text-sm font-medium leading-snug">{code.title}</p>
-      </div>
-    </div>
+    </article>
   );
 }

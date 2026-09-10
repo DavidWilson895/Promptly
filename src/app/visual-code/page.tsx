@@ -65,7 +65,7 @@ export default function VisualCodePage() {
       </div>
 
       {filtered.length > 0 ? (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        <div className="columns-2 gap-3 space-y-3 pt-4 sm:gap-4 sm:space-y-4 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6">
           {filtered.map((code) => (
             <VisualCodeCard key={code.id} code={code} onOpen={openCode} />
           ))}
