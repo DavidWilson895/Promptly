@@ -45,9 +45,11 @@ export function PromptOverlay({
   const [bookmarked, setBookmarked] = useState(false);
   const [loved, setLoved] = useState(false);
   const [pop, setPop] = useState(false);
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
     if (!open) return;
+    setActive(0);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
@@ -69,6 +71,7 @@ export function PromptOverlay({
   if (!open || !prompt) return null;
   const item = prompt;
 
+  const images = item.images && item.images.length > 0 ? item.images : [item.image];
   const related = ALL_FOR_RELATED.filter((p) => p.id !== item.id).slice(0, 6);
 
   async function copyPrompt(text = item.prompt) {
@@ -98,8 +101,8 @@ export function PromptOverlay({
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-white md:flex-row">
       {/* Image area */}
-      <div className="relative flex flex-1 items-center justify-center bg-[#f6f6f4] p-4 md:p-8">
-        <div className="absolute right-4 top-4 flex items-center gap-2">
+      <div className="relative flex flex-1 flex-col overflow-y-auto bg-[#f6f6f4]">
+        <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
@@ -116,8 +119,8 @@ export function PromptOverlay({
             aria-label="Download"
             onClick={() => {
               const a = document.createElement("a");
-              a.href = item.image;
-              const ext = item.image.split(".").pop() || "jpg";
+              a.href = images[active];
+              const ext = images[active].split(".").pop() || "jpg";
               a.download = `${item.id}.${ext}`;
               a.click();
             }}
@@ -171,12 +174,36 @@ export function PromptOverlay({
             <X className="size-5" />
           </Button>
         </div>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={item.image}
-          alt={item.title}
-          className="max-h-[56vh] w-auto max-w-full object-contain shadow-sm md:max-h-[88vh]"
-        />
+        <div className="flex min-h-0 flex-1 items-center justify-center p-4 pb-0 md:p-8 md:pb-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={images[active]}
+            alt={item.title}
+            className="max-h-[56vh] w-auto max-w-full rounded-lg object-contain shadow-sm md:max-h-[70vh]"
+          />
+        </div>
+
+        {images.length > 1 ? (
+          <div className="flex shrink-0 flex-wrap justify-center gap-2 p-4 md:p-6">
+            {images.map((img, i) => (
+              <button
+                key={img}
+                type="button"
+                onClick={() => setActive(i)}
+                className={cn(
+                  "h-14 w-12 overflow-hidden rounded-md border bg-muted transition-all",
+                  i === active
+                    ? "border-foreground/60 ring-1 ring-foreground/40"
+                    : "border-transparent opacity-60 hover:opacity-100"
+                )}
+                aria-label={`Reference ${i + 1}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img} alt="" className="h-full w-full object-cover" />
+              </button>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       {/* Right panel */}

@@ -42,6 +42,7 @@ export type Style = (typeof STYLES)[number];
 export type Prompt = {
   id: string;
   image: string;
+  images?: string[];
   model: Model;
   category: Category;
   style: Style;
