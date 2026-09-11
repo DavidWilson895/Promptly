@@ -154,7 +154,7 @@ export default function McpServerPage() {
             role="tablist"
             aria-label="Sort servers"
           >
-            <div className="flex items-center">
+            <div className="flex items-center gap-1 px-2">
               {TABS.map((t) => {
                 const active = sort === t.key;
                 return (
@@ -168,16 +168,18 @@ export default function McpServerPage() {
                       scrollFeedTop();
                     }}
                     className={cn(
-                      "relative flex-1 py-4 text-lg transition-colors hover:bg-muted/60",
+                      "px-3 py-3 text-[15px] transition-colors",
                       active
-                        ? "font-bold text-foreground"
+                        ? "font-semibold text-foreground"
                         : "text-muted-foreground hover:text-foreground"
                     )}
                   >
-                    {t.label}
-                    {active ? (
-                      <span className="absolute bottom-0 left-1/2 h-1 w-14 -translate-x-1/2 rounded-full bg-sky-500" />
-                    ) : null}
+                    <span className="relative pb-1.5">
+                      {t.label}
+                      {active ? (
+                        <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-foreground" />
+                      ) : null}
+                    </span>
                   </button>
                 );
               })}
