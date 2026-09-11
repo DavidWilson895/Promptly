@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
-import { BadgeCheck, Bookmark, Search, X } from "lucide-react";
+import { BadgeCheck, Bookmark, X } from "lucide-react";
 import { FeedCard } from "@/components/mcp/feed-card";
 import { ShopSidebar } from "@/components/mcp/shop-sidebar";
 import { CartPanel } from "@/components/mcp/cart-panel";
@@ -184,35 +184,17 @@ export default function McpServerPage() {
             </div>
           </div>
 
-          {/* Search + active filters */}
+          {/* Active filters */}
           <div className="border-b border-border px-4 py-3">
-            <div className="relative">
-              <Search
-                className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search servers, tools, tags…"
-                aria-label="Search servers"
-                className="h-12 w-full rounded-full border border-border bg-muted/60 pl-11 pr-10 text-base outline-none placeholder:text-muted-foreground focus:border-sky-500 focus:bg-background"
-              />
-              {query ? (
-                <button
-                  type="button"
-                  onClick={() => setQuery("")}
-                  aria-label="Clear search"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  <X className="size-4" />
-                </button>
-              ) : null}
-            </div>
-            <div className="mt-2 flex flex-wrap items-center gap-1.5 px-1">
-              {hasActiveFilters ? (
+            <div className="flex flex-wrap items-center gap-1.5 px-1">
+              {hasActiveFilters || query ? (
                 <>
-                  {category !== "All" ? (
+                  {query ? (
+                    <FilterChip
+                      label={`“${query}”`}
+                      onClear={() => setQuery("")}
+                    />
+                  ) : null}                  {category !== "All" ? (
                     <FilterChip
                       label={category}
                       onClear={() => setCategory("All")}
