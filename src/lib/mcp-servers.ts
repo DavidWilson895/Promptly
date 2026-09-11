@@ -455,6 +455,30 @@ export function formatCompact(n: number): string {
 
 export type SortKey = "hot" | "new" | "top";
 
+/** Simple Icons slug per server for crisp brand marks. Servers without a
+ *  slug fall back to a neutral initial tile. */
+export const SERVER_LOGOS: Record<string, string> = {
+  "github-mcp": "github",
+  "slack-mcp": "slack",
+  "postgres-mcp": "postgresql",
+  "playwright-mcp": "playwright",
+  "notion-mcp": "notion",
+  "figma-mcp": "figma",
+  "stripe-mcp": "stripe",
+  "google-drive-mcp": "googledrive",
+  "supabase-mcp": "supabase",
+  "sentry-mcp": "sentry",
+  "linear-mcp": "linear",
+  "jira-mcp": "jira",
+  "redis-mcp": "redis",
+  "sqlite-mcp": "sqlite",
+};
+
+export function logoUrl(server: McpServer): string | null {
+  const slug = SERVER_LOGOS[server.id];
+  return slug ? `https://cdn.simpleicons.org/${slug}/404040` : null;
+}
+
 export function sortServers(servers: McpServer[], sort: SortKey): McpServer[] {
   const sorted = [...servers];
   switch (sort) {

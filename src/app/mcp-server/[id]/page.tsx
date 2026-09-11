@@ -15,19 +15,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import {
   MCP_SERVERS,
-  avatarOf,
   formatCompact,
   metricsOf,
   timeAgo,
 } from "@/lib/mcp-servers";
 import type { McpServer } from "@/lib/mcp-servers";
+import { ServerMark } from "@/components/mcp/server-mark";
 import { useStack } from "@/lib/use-stack";
 import { cn } from "@/lib/utils";
 
 const PRICE_STYLES: Record<string, string> = {
   Free: "border-emerald-200 bg-emerald-50 text-emerald-700",
   Freemium: "border-amber-200 bg-amber-50 text-amber-700",
-  Paid: "border-sky-200 bg-sky-50 text-sky-700",
+  Paid: "border-slate-200 bg-slate-100 text-slate-700",
 };
 
 function humanize(tool: string): string {
@@ -164,7 +164,6 @@ export default function McpServerDetailPage() {
   }
 
   const m = metricsOf(server);
-  const av = avatarOf(server);
   const handle = `@${server.org.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
   const inStack = stack.has(server.id);
 
@@ -206,15 +205,12 @@ export default function McpServerDetailPage() {
           {/* Main */}
           <div className="min-w-0">
             <div className="flex items-center gap-4">
-              <span
-                className={cn(
-                  "flex size-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-2xl font-bold text-white",
-                  av.gradient
-                )}
-                aria-hidden="true"
-              >
-                {av.letter}
-              </span>
+              <ServerMark
+                server={server}
+                className="size-14"
+                roundedClass="rounded-xl"
+                letterClassName="text-2xl"
+              />
               <div className="min-w-0">
                 <h1 className="truncate font-sans text-3xl font-bold tracking-tight">
                   {server.name}
@@ -456,22 +452,17 @@ export default function McpServerDetailPage() {
                 </div>
                 <div className="mt-2 flex flex-col">
                   {related.map((s) => {
-                    const rav = avatarOf(s);
                     return (
                       <Link
                         key={s.id}
                         href={`/mcp-server/${s.id}`}
                         className="flex w-full items-start gap-2.5 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-black/[0.04]"
                       >
-                        <span
-                          className={cn(
-                            "flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-sm font-bold text-white",
-                            rav.gradient
-                          )}
-                          aria-hidden="true"
-                        >
-                          {rav.letter}
-                        </span>
+                        <ServerMark
+                          server={s}
+                          className="size-8"
+                          letterClassName="text-sm"
+                        />
                         <span className="min-w-0">
                           <span className="block truncate text-base font-bold leading-tight">
                             {s.name}

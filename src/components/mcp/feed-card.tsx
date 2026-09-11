@@ -8,8 +8,8 @@ import {
   Star,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { ServerMark } from "@/components/mcp/server-mark";
 import {
-  avatarOf,
   formatCompact,
   metricsOf,
   timeAgo,
@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 const PRICE_STYLES: Record<string, string> = {
   Free: "border-emerald-200 bg-emerald-50 text-emerald-700",
   Freemium: "border-amber-200 bg-amber-50 text-amber-700",
-  Paid: "border-sky-200 bg-sky-50 text-sky-700",
+  Paid: "border-slate-200 bg-slate-100 text-slate-700",
 };
 
 export function FeedCard({
@@ -38,7 +38,6 @@ export function FeedCard({
   onShare: () => void;
   onOpen: () => void;
 }) {
-  const av = avatarOf(server);
   const m = metricsOf(server);
   const handle = `@${server.org.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
 
@@ -51,19 +50,11 @@ export function FeedCard({
       tabIndex={0}
       role="button"
       aria-label={`View ${server.name} details`}
-      className="flex cursor-pointer flex-col rounded-xl border border-border bg-card p-4 shadow-sm outline-none transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:ring-sky-500"
+      className="flex cursor-pointer flex-col rounded-xl border border-slate-200/80 bg-card p-4 shadow-xs outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md focus-visible:ring-2 focus-visible:ring-sky-500"
     >
       {/* Header */}
       <div className="flex items-center gap-2.5">
-        <span
-          className={cn(
-            "flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-base font-bold text-white",
-            av.gradient
-          )}
-          aria-hidden="true"
-        >
-          {av.letter}
-        </span>
+        <ServerMark server={server} className="size-10" letterClassName="text-base" />
         <div className="min-w-0 flex-1">
           <p className="flex items-center gap-1">
             <span className="truncate text-lg font-bold leading-tight">
@@ -76,7 +67,7 @@ export function FeedCard({
               />
             ) : null}
           </p>
-          <p className="truncate text-sm text-muted-foreground">
+          <p className="truncate font-mono text-xs text-muted-foreground">
             {handle} · {timeAgo(server)}
           </p>
         </div>
@@ -94,7 +85,7 @@ export function FeedCard({
       <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
         <Badge
           variant="outline"
-          className="rounded-full border-border/60 text-xs font-medium"
+          className="rounded-full border-border/60 font-mono text-xs font-medium"
         >
           {server.category}
         </Badge>
@@ -102,13 +93,13 @@ export function FeedCard({
           <Badge
             key={t}
             variant="secondary"
-            className="rounded-full text-xs font-medium"
+            className="rounded-full font-mono text-xs font-medium"
           >
             {t}
           </Badge>
         ))}
         {server.tags.length > 2 ? (
-          <span className="text-xs tabular-nums text-muted-foreground">
+          <span className="font-mono text-xs tabular-nums text-muted-foreground">
             +{server.tags.length - 2}
           </span>
         ) : null}
@@ -120,7 +111,7 @@ export function FeedCard({
       {/* Stars · Save · Share */}
       <div className="mt-3 flex items-center gap-1 border-t border-border pt-2.5">
         <span
-          className="flex items-center gap-1.5 text-sm tabular-nums text-muted-foreground"
+          className="flex items-center gap-1.5 font-mono text-xs tabular-nums text-muted-foreground"
           title={`${server.stars.toLocaleString()} GitHub stars`}
         >
           <Star

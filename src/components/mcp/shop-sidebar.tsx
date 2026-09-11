@@ -19,9 +19,9 @@ import {
 import {
   MCP_SERVERS,
   MCP_CATEGORIES,
-  avatarOf,
   metricsOf,
 } from "@/lib/mcp-servers";
+import { ServerMark } from "@/components/mcp/server-mark";
 import { cn } from "@/lib/utils";
 
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
@@ -226,7 +226,6 @@ export function ShopSidebar({
       <div className="flex flex-col" aria-label="Top rated">
         {topRated.map((s) => {
           const m = metricsOf(s);
-          const av = avatarOf(s);
           return (
             <button
               key={s.id}
@@ -234,19 +233,15 @@ export function ShopSidebar({
               onClick={() => onCategory(s.category)}
               className="flex w-full items-center gap-2.5 rounded-lg px-3 py-1.5 text-left transition-colors hover:bg-muted"
             >
-              <span
-                className={cn(
-                  "flex size-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-[11px] font-bold text-white",
-                  av.gradient
-                )}
-                aria-hidden="true"
-              >
-                {av.letter}
-              </span>
+              <ServerMark
+                server={s}
+                className="size-6"
+                letterClassName="text-[11px]"
+              />
               <span className="min-w-0 flex-1 truncate text-base">
                 {s.name}
               </span>
-              <span className="shrink-0 text-sm font-bold tabular-nums">
+              <span className="shrink-0 font-mono text-sm font-bold tabular-nums">
                 {m.rating.toFixed(1)}
               </span>
             </button>
