@@ -89,8 +89,11 @@ export function ShopSidebar({
         <button
           type="button"
           onClick={() => onCategory("All")}
-          className="flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-lg transition-colors hover:bg-muted"
-          aria-pressed={category === "All"}
+            className={cn(
+              "flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-lg transition-colors hover:bg-muted",
+              category === "All" && "bg-muted"
+            )}
+            aria-pressed={category === "All"}
         >
           <House className="size-6 shrink-0 text-muted-foreground" />
           <span
@@ -114,7 +117,10 @@ export function ShopSidebar({
               key={c}
               type="button"
               onClick={() => onCategory(c)}
-              className="flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-lg transition-colors hover:bg-muted"
+              className={cn(
+                "flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-lg transition-colors hover:bg-muted",
+                active && "bg-muted"
+              )}
               aria-pressed={active}
             >
               <Icon className="size-6 shrink-0 text-muted-foreground" />

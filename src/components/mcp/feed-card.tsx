@@ -51,7 +51,7 @@ export function FeedCard({
       tabIndex={0}
       role="button"
       aria-label={`View ${server.name} details`}
-      className="flex cursor-pointer flex-col rounded-2xl border border-border bg-card p-4 outline-none transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-sky-500"
+      className="flex cursor-pointer flex-col rounded-xl border border-border bg-card p-4 shadow-sm outline-none transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:ring-sky-500"
     >
       {/* Header */}
       <div className="flex items-center gap-2.5">

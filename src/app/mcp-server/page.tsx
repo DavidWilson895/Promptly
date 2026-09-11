@@ -120,8 +120,12 @@ export default function McpServerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pt-14">
-      <div className="mx-auto flex w-full max-w-[1760px] items-start justify-center">
+    <div className="relative min-h-screen bg-muted/30 pt-14">
+      <div
+        className="pointer-events-none absolute inset-x-0 top-14 h-72 bg-gradient-to-b from-orange-100/70 via-sky-100/40 to-transparent"
+        aria-hidden="true"
+      />
+      <div className="relative mx-auto flex w-full max-w-[1760px] items-start justify-center">
         {/* Left rail */}
         <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 shrink-0 overflow-y-auto px-2 py-2 md:block lg:w-72 xl:w-80">
           <ShopSidebar
@@ -145,7 +149,7 @@ export default function McpServerPage() {
         </aside>
 
         {/* Center feed */}
-        <section className="min-h-screen w-full min-w-0 flex-1 border-x border-border">
+        <section className="min-h-screen w-full min-w-0 flex-1">
           <div ref={feedTopRef} className="scroll-mt-16" />
 
           {/* Sort tabs */}
