@@ -105,7 +105,7 @@ export default function McpServerPage() {
     <div className="bg-muted/30">
       <main className="w-full px-4 pb-28 md:px-6 lg:px-8">
         {/* Slim storefront header */}
-        <header className="relative mx-auto flex max-w-6xl flex-col gap-4 pt-20 md:pt-24">
+        <header className="relative mx-auto flex w-full max-w-[1600px] flex-col gap-4 pt-20 md:pt-24">
           <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
             <span className="inline-flex items-center gap-1 rounded-full bg-foreground px-3 py-1 text-background">
               <Sparkles className="size-3.5" aria-hidden="true" />
@@ -158,9 +158,9 @@ export default function McpServerPage() {
         </header>
 
         {/* Three-column storefront + feed */}
-        <div className="mx-auto mt-8 flex max-w-6xl items-start gap-8">
+        <div className="mx-auto mt-8 flex w-full max-w-[1600px] items-start gap-6 xl:gap-8">
           {/* Left rail */}
-          <aside className="sticky top-24 hidden w-60 shrink-0 lg:block">
+          <aside className="sticky top-24 hidden w-56 shrink-0 md:block lg:w-64">
             <ShopSidebar
               category={category}
               onCategory={setCategory}
@@ -289,7 +289,7 @@ export default function McpServerPage() {
           </section>
 
           {/* Right rail */}
-          <aside className="sticky top-24 hidden w-64 shrink-0 xl:block">
+          <aside className="sticky top-24 hidden w-64 shrink-0 lg:block xl:w-72">
             <RightRail onCategory={setCategory} />
           </aside>
         </div>
