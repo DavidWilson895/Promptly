@@ -186,23 +186,29 @@ export function ShopSidebar({
       <p className="px-3 pb-2 pt-5 text-sm font-bold uppercase tracking-wide text-muted-foreground">
         Price
       </p>
-      <div className="flex flex-wrap gap-2 px-3">
-        {prices.map((p) => (
-          <button
-            key={p}
-            type="button"
-            onClick={() => onPriceFilter(p)}
-            aria-pressed={priceFilter === p}
-            className={cn(
-              "rounded-full border px-3 py-1 text-sm font-bold transition-colors",
-              priceFilter === p
-                ? "border-foreground bg-foreground text-background"
-                : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
-            )}
-          >
-            {p}
-          </button>
-        ))}
+      <div className="px-3">
+        <div
+          className="flex w-fit divide-x divide-border overflow-hidden rounded-full border border-border"
+          role="group"
+          aria-label="Filter by price"
+        >
+          {prices.map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => onPriceFilter(p)}
+              aria-pressed={priceFilter === p}
+              className={cn(
+                "px-3 py-1 text-sm font-bold transition-colors",
+                priceFilter === p
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
       </div>
 
       <p className="px-3 pb-1 pt-5 text-sm font-bold uppercase tracking-wide text-muted-foreground">
