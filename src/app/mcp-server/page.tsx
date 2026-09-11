@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
-import { BadgeCheck, Bookmark, X } from "lucide-react";
+import { BadgeCheck, Bookmark, Search, X } from "lucide-react";
 import { FeedCard } from "@/components/mcp/feed-card";
 import { ShopSidebar } from "@/components/mcp/shop-sidebar";
 import { CartPanel } from "@/components/mcp/cart-panel";
@@ -154,7 +154,8 @@ export default function McpServerPage() {
             role="tablist"
             aria-label="Sort servers"
           >
-            <div className="flex items-center gap-1 px-2">
+            <div className="flex items-center justify-between gap-2 pl-2 pr-4">
+              <div className="flex min-w-0 items-center gap-1">
               {TABS.map((t) => {
                 const active = sort === t.key;
                 return (
@@ -183,6 +184,30 @@ export default function McpServerPage() {
                   </button>
                 );
               })}
+              </div>
+              <div className="relative w-40 shrink-0 sm:w-56 md:w-72">
+                <Search
+                  className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search servers…"
+                  aria-label="Search servers"
+                  className="h-9 w-full rounded-full border border-border bg-muted/60 pl-9 pr-8 text-sm outline-none placeholder:text-muted-foreground focus:border-sky-500 focus:bg-background"
+                />
+                {query ? (
+                  <button
+                    type="button"
+                    onClick={() => setQuery("")}
+                    aria-label="Clear search"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                ) : null}
+              </div>
             </div>
           </div>
 
