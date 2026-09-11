@@ -35,9 +35,9 @@ export function MagneticGrid({
   className,
   dotColor = "#94A3B8",
   activeColor = "#0EA5E9",
-  dotSize = 3.5,
-  dotSpacing = 22,
-  dotOpacity = 0.7,
+  dotSize = 4,
+  dotSpacing = 20,
+  dotOpacity = 0.8,
   influenceRadius = 130,
   attract = false,
   maxDisplace = 10,
@@ -133,7 +133,7 @@ export function MagneticGrid({
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
       const o = optsRef.current;
       const raw = Math.ceil(w / o.dotSpacing) * Math.ceil(h / o.dotSpacing);
-      spacing = raw > 5000 ? Math.ceil(Math.sqrt((w * h) / 5000)) : o.dotSpacing;
+      spacing = raw > 9000 ? Math.ceil(Math.sqrt((w * h) / 9000)) : o.dotSpacing;
       const cols = Math.floor(w / spacing);
       const rows = Math.floor(h / spacing);
       const ox = (w - cols * spacing) / 2;
