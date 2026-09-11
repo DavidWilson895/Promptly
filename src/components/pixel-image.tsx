@@ -15,7 +15,8 @@ function getSeen(): Set<string> {
   seenCache = new Set<string>();
   try {
     if (typeof window !== "undefined") {
-      const raw = window.sessionStorage.getItem(SEEN_KEY);
+      // localStorage (not session) so refreshes stay instant too.
+      const raw = window.localStorage.getItem(SEEN_KEY);
       if (raw) {
         const arr: unknown = JSON.parse(raw);
         if (Array.isArray(arr)) {
@@ -42,9 +43,9 @@ function markSeen(src: string): void {
     const seen = getSeen();
     if (seen.has(src)) return;
     seen.add(src);
-    window.sessionStorage.setItem(
+    window.localStorage.setItem(
       SEEN_KEY,
-      JSON.stringify([...seen].slice(-300))
+      JSON.stringify([...seen].slice(-500))
     );
   } catch {
     /* storage unavailable */
@@ -225,7 +226,12 @@ export function PixelImage({
 
   const markReady = useCallback(() => {
     const img = imgRef.current;
-    if (img && img.naturalWidth > 0) setReady(true);
+    if (img && img.naturalWidth > 0) {
+      // Bytes arrived = loaded. Record immediately so the animation never
+      // replays for this image, even if it unmounts mid-animation.
+      if (srcRef.current) markSeen(srcRef.current);
+      setReady(true);
+    }
   }, []);
 
   // Reset when the source changes.
@@ -261,7 +267,7 @@ export function PixelImage({
     // Already seen this session, or served instantly from cache (e.g. page
     // refresh) — show sharp immediately instead of replaying the animation.
     const srcKey = srcRef.current;
-    const loadedFast = performance.now() - assignTimeRef.current < 200;
+    const loadedFast = performance.now() - assignTimeRef.current < 350;
     if (srcKey && (hasSeen(srcKey) || loadedFast)) {
       markSeen(srcKey);
       img.style.opacity = "1";
