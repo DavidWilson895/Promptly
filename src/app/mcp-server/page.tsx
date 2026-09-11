@@ -122,7 +122,7 @@ export default function McpServerPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pt-14">
-      <div className="mx-auto flex w-full max-w-[1440px] items-start justify-center px-6">
+      <div className="mx-auto flex w-full items-start justify-center px-6 md:px-8 lg:px-10">
         {/* Left rail */}
         <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 shrink-0 overflow-y-auto px-2 pb-2 pt-10 md:block lg:w-72 xl:w-80">
           <ShopSidebar
@@ -262,7 +262,7 @@ export default function McpServerPage() {
           {filtered.length > 0 ? (
             <div className="relative">
               <MagneticGrid />
-              <div className="relative grid grid-cols-1 gap-6 p-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="relative grid grid-cols-1 gap-6 p-6 md:grid-cols-2 lg:grid-cols-3 min-[1500px]:grid-cols-4">
               {filtered.map((server) => (
                 <FeedCard
                   key={server.id}
