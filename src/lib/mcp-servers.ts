@@ -379,3 +379,80 @@ export const MCP_CATEGORY_COUNTS = MCP_CATEGORIES.filter((c) => c !== "All").map
     count: MCP_SERVERS.filter((s) => s.category === c).length,
   })
 );
+
+export type McpMetrics = {
+  upvotes: number;
+  comments: number;
+  rating: number;
+  reviews: number;
+  postedDays: number;
+  priceTier: "Free" | "Freemium" | "Paid";
+  author: string;
+  community: string;
+};
+
+function hash(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) {
+    h = (h * 31 + s.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h);
+}
+
+const AUTHORS = [
+  "@octocat",
+  "@swyx",
+  "@karpathy",
+  "@vorell",
+  "@mharrigan",
+  "@t3dotgg",
+  "@0xburg",
+  "@natfriedman",
+  "@simonw",
+  "@kpdecker",
+];
+
+const COMMUNITIES = [
+  "r/servers",
+  "r/aiagents",
+  "r/MCP",
+  "r/ClaudeAI",
+  "r/selfhosted",
+  "r/webdev",
+];
+
+export function metricsOf(server: McpServer): McpMetrics {
+  const h = hash(server.id);
+  const tierRoll = h % 10;
+  return {
+    upvotes: 300 + (h % 12000),
+    comments: 18 + (h % 480),
+    rating: 4 + ((h % 10) / 10),
+    reviews: 80 + (h % 920),
+    postedDays: h % 90,
+    priceTier: tierRoll < 2 ? "Paid" : tierRoll < 7 ? "Freemium" : "Free",
+    author: AUTHORS[h % AUTHORS.length],
+    community: COMMUNITIES[h % COMMUNITIES.length],
+  };
+}
+
+export type SortKey = "hot" | "new" | "top";
+
+export function sortServers(servers: McpServer[], sort: SortKey): McpServer[] {
+  const sorted = [...servers];
+  switch (sort) {
+    case "new":
+      return sorted.sort(
+        (a, b) => metricsOf(a).postedDays - metricsOf(b).postedDays
+      );
+    case "top":
+      return sorted.sort((a, b) => metricsOf(b).upvotes - metricsOf(a).upvotes);
+    case "hot":
+    default:
+      return sorted.sort((a, b) => {
+        const score = (s: McpServer) =>
+          metricsOf(s).upvotes / (metricsOf(s).postedDays + 2);
+        return score(b) - score(a);
+      });
+  }
+}
