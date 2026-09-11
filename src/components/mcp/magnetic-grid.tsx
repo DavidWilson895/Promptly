@@ -33,11 +33,11 @@ type Dot = {
  */
 export function MagneticGrid({
   className,
-  dotColor = "#CBD5E1",
+  dotColor = "#94A3B8",
   activeColor = "#0EA5E9",
-  dotSize = 3,
-  dotSpacing = 26,
-  dotOpacity = 0.55,
+  dotSize = 3.5,
+  dotSpacing = 24,
+  dotOpacity = 0.7,
   influenceRadius = 130,
   attract = false,
   maxDisplace = 10,

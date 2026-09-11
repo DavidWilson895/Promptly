@@ -262,7 +262,7 @@ export default function McpServerPage() {
           {filtered.length > 0 ? (
             <div className="relative">
               <MagneticGrid />
-              <div className="relative grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+              <div className="relative grid grid-cols-1 gap-4 p-6 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {filtered.map((server) => (
                 <FeedCard
                   key={server.id}
