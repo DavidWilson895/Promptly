@@ -1,14 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import {
-  avatarOf,
-  logoUrl,
-  type McpServer,
-} from "@/lib/mcp-servers";
+import { avatarOf, type McpServer } from "@/lib/mcp-servers";
+import { logoSvg } from "@/lib/mcp-logos";
 import { cn } from "@/lib/utils";
 
-/** Crisp brand SVG in a neutral tile, falling back to a muted initial. */
+/** Crisp official brand mark in a neutral tile, falling back to an initial. */
 export function ServerMark({
   server,
   className,
@@ -20,33 +16,25 @@ export function ServerMark({
   roundedClass?: string;
   letterClassName?: string;
 }) {
-  const [failed, setFailed] = useState(false);
-  const url = logoUrl(server);
+  const svg = logoSvg(server.id);
   const av = avatarOf(server);
 
   return (
     <span
       className={cn(
-        "flex shrink-0 items-center justify-center overflow-hidden bg-neutral-100",
+        "flex shrink-0 items-center justify-center overflow-hidden bg-neutral-100 text-neutral-700",
         roundedClass ?? "rounded-full",
         className
       )}
       aria-hidden="true"
     >
-      {url && !failed ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={url}
-          alt=""
-          loading="lazy"
-          draggable={false}
-          onError={() => setFailed(true)}
-          className="size-[62%]"
+      {svg ? (
+        <span
+          className="block size-[62%] [&>svg]:size-full"
+          dangerouslySetInnerHTML={{ __html: svg }}
         />
       ) : (
-        <span className={cn("font-bold text-neutral-500", letterClassName)}>
-          {av.letter}
-        </span>
+        <span className={cn("font-bold", letterClassName)}>{av.letter}</span>
       )}
     </span>
   );
