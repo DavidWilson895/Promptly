@@ -66,6 +66,9 @@ export function Header() {
           <Link href="/" className={navLink}>
             Explore
           </Link>
+          <Link href="/mcp-server" className={navLink}>
+            MCP Servers
+          </Link>
           <Link href="/my-library" className={navLink}>
             My Library
           </Link>
