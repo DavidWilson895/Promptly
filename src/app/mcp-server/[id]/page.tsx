@@ -160,7 +160,7 @@ export default function McpServerDetailPage() {
 
   return (
     <div className="min-h-screen bg-background pt-14">
-      <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6 sm:px-6">
+      <main className="mx-auto w-full max-w-[1400px] px-4 pb-24 pt-6 sm:px-6">
         <Link
           href="/mcp-server"
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
@@ -169,7 +169,7 @@ export default function McpServerDetailPage() {
           All servers
         </Link>
 
-        <div className="mt-4 grid gap-8 lg:grid-cols-[1fr_280px]">
+        <div className="mt-4 grid gap-8 lg:grid-cols-[1fr_320px]">
           {/* Main */}
           <div className="min-w-0">
             <div className="flex items-center gap-4">
