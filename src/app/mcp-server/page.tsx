@@ -212,16 +212,15 @@ export default function McpServerPage() {
           </div>
 
           {/* Active filters */}
-          <div className="border-b border-border px-4 py-3">
-            <div className="flex flex-wrap items-center gap-1.5 px-1">
-              {hasActiveFilters || query ? (
-                <>
-                  {query ? (
-                    <FilterChip
-                      label={`“${query}”`}
-                      onClear={() => setQuery("")}
-                    />
-                  ) : null}                  {category !== "All" ? (
+          {hasActiveFilters || query ? (
+            <div className="border-b border-border px-4 py-3">
+              <div className="flex flex-wrap items-center gap-1.5 px-1">
+                {query ? (
+                  <FilterChip
+                    label={`“${query}”`}
+                    onClear={() => setQuery("")}
+                  />
+                ) : null}                  {category !== "All" ? (
                     <FilterChip
                       label={category}
                       onClear={() => setCategory("All")}
@@ -254,14 +253,9 @@ export default function McpServerPage() {
                   >
                     Clear all
                   </button>
-                </>
-              ) : (
-                <span className="text-sm tabular-nums text-muted-foreground">
-                  {filtered.length} servers · sorted by {sort}
-                </span>
-              )}
+              </div>
             </div>
-          </div>
+          ) : null}
 
           {/* Feed */}
           {filtered.length > 0 ? (
