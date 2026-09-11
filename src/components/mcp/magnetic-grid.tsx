@@ -216,27 +216,34 @@ export function MagneticGrid({
       }
       const vcenters = [...vset];
       const hcenters = [...hset];
+      // Edge padding strips get one centered line each, just like gutters.
+      const vpad = W > 48 ? [12, W - 12] : [];
+      const hpad = H > 48 ? [12, H - 12] : [];
+      const allV = [...vcenters, ...vpad];
+      const allH = [...hcenters, ...hpad];
 
       const insideCard = (x: number, y: number) =>
         rects.some((r) => x > r.l && x < r.r && y > r.t && y < r.b);
+      // Half a gutter wide: anything this close to a line belongs to it,
+      // so no parallel clusters can survive inside a strip.
       const nearLine = (x: number, y: number) =>
-        vcenters.some((gx) => Math.abs(x - gx) < spacing * 0.35) ||
-        hcenters.some((gy) => Math.abs(y - gy) < spacing * 0.35);
+        allV.some((gx) => Math.abs(x - gx) < 14) ||
+        allH.some((gy) => Math.abs(y - gy) < 14);
 
       dots = [];
-      // Dot lines down the middle of every vertical gutter.
-      for (const gx of vcenters) {
+      // One centered file of dots per vertical line.
+      for (const gx of allV) {
         for (let y = spacing / 2; y < H; y += spacing) {
           if (!insideCard(gx, y)) dots.push(mk(gx, y));
         }
       }
-      // Dot lines along the middle of every horizontal gutter.
-      for (const gy of hcenters) {
+      // One centered file of dots per horizontal line.
+      for (const gy of allH) {
         for (let x = spacing / 2; x < W; x += spacing) {
           if (!insideCard(x, gy)) dots.push(mk(x, gy));
         }
       }
-      // Fill the open padding with the lattice, skipping cards and lines.
+      // Fill large open areas with the lattice, skipping cards and lines.
       const cols = Math.floor(w / spacing);
       const rowsN = Math.floor(h / spacing);
       const ox = (w - cols * spacing) / 2;
