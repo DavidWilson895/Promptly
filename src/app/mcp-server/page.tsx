@@ -123,7 +123,7 @@ export default function McpServerPage() {
     <div className="min-h-screen bg-[#F8FAFC] pt-14">
       <div className="mx-auto flex w-full max-w-[1760px] items-start justify-center">
         {/* Left rail */}
-        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 shrink-0 overflow-y-auto px-2 pb-2 pt-6 md:block lg:w-72 xl:w-80">
+        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 shrink-0 overflow-y-auto px-2 pb-2 pt-10 md:block lg:w-72 xl:w-80">
           <ShopSidebar
             category={category}
             onCategory={(c) => {
