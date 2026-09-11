@@ -11,6 +11,7 @@ import {
   type VisualCode,
 } from "@/lib/visual-codes";
 import { cn } from "@/lib/utils";
+import { PixelImage } from "@/components/pixel-image";
 
 export function VisualCodeOverlay({
   code,
@@ -137,10 +138,15 @@ export function VisualCodeOverlay({
         {images.length > 0 ? (
           <div className="flex flex-1 flex-col">
             <div className="flex min-h-0 flex-1 items-center justify-center p-4 pb-0 md:p-8 md:pb-0">
-              <img
+              <PixelImage
+                key={images[active]}
                 src={images[active]}
                 alt={item.title}
-                className="max-h-[56vh] w-auto max-w-full rounded-lg object-contain shadow-sm md:max-h-[70vh]"
+                fit="contain"
+                eager
+                replayOnHover={false}
+                className="w-auto overflow-hidden rounded-lg"
+                imgClassName="max-h-[56vh] w-auto max-w-full rounded-lg object-contain shadow-sm md:max-h-[70vh]"
               />
             </div>
             {images.length > 1 ? (
@@ -158,10 +164,14 @@ export function VisualCodeOverlay({
                     )}
                     aria-label={`Reference ${i + 1}`}
                   >
-                    <img
+                    <PixelImage
                       src={img}
                       alt=""
-                      className="h-full w-full object-cover"
+                      fill
+                      replayOnHover={false}
+                      duration={0.7}
+                      pixelSize={10}
+                      className="h-full w-full"
                     />
                   </button>
                 ))}
@@ -260,10 +270,15 @@ export function VisualCodeOverlay({
                       aria-label={`View ${r.title}`}
                     >
                       {rimgs[0] ? (
-                        <img
+                        <PixelImage
                           src={rimgs[0]}
                           alt=""
-                          className="size-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+                          fill
+                          replayOnHover={false}
+                          duration={0.7}
+                          pixelSize={10}
+                          className="size-full"
+                          imgClassName="transition-transform duration-200 group-hover:scale-[1.03]"
                         />
                       ) : (
                         <span className="flex size-full items-center justify-center p-2 text-center text-xs text-muted-foreground">

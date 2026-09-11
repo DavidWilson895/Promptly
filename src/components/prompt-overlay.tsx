@@ -26,6 +26,7 @@ import {
   X,
 } from "lucide-react";
 import { type Prompt } from "@/lib/data";
+import { PixelImage } from "@/components/pixel-image";
 import { REAL_PROMPTS } from "@/lib/data-real";
 import { UPLOADED_PROMPTS } from "@/lib/data-upload";
 import { cn } from "@/lib/utils";
@@ -175,11 +176,15 @@ export function PromptOverlay({
           </Button>
         </div>
         <div className="flex min-h-0 flex-1 items-center justify-center p-4 pb-0 md:p-8 md:pb-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <PixelImage
+            key={images[active]}
             src={images[active]}
             alt={item.title}
-            className="max-h-[56vh] w-auto max-w-full rounded-lg object-contain shadow-sm md:max-h-[70vh]"
+            fit="contain"
+            eager
+            replayOnHover={false}
+            className="w-auto overflow-hidden rounded-lg"
+            imgClassName="max-h-[56vh] w-auto max-w-full rounded-lg object-contain shadow-sm md:max-h-[70vh]"
           />
         </div>
 
@@ -198,8 +203,15 @@ export function PromptOverlay({
                 )}
                 aria-label={`Reference ${i + 1}`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img} alt="" className="h-full w-full object-cover" />
+                <PixelImage
+                  src={img}
+                  alt=""
+                  fill
+                  replayOnHover={false}
+                  duration={0.7}
+                  pixelSize={10}
+                  className="h-full w-full"
+                />
               </button>
             ))}
           </div>
@@ -364,11 +376,15 @@ export function PromptOverlay({
                   className="group relative aspect-square overflow-hidden rounded-lg border bg-muted text-left"
                   aria-label={`View ${r.title}`}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <PixelImage
                     src={r.image}
                     alt=""
-                    className="size-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+                    fill
+                    replayOnHover={false}
+                    duration={0.7}
+                    pixelSize={10}
+                    className="size-full"
+                    imgClassName="transition-transform duration-200 group-hover:scale-[1.03]"
                   />
                 </button>
               ))}

@@ -1,6 +1,7 @@
 "use client";
 
 import { ImagePlus } from "lucide-react";
+import { PixelImage } from "@/components/pixel-image";
 
 import { categoryOf, type VisualCode } from "@/lib/visual-codes";
 
@@ -23,12 +24,10 @@ export function VisualCodeCard({
         aria-label={`View code: ${code.title}`}
       >
         {src ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <PixelImage
             src={src}
             alt=""
-            loading="lazy"
-            className="h-auto w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+            imgClassName="transition-transform duration-300 ease-out group-hover:scale-[1.03]"
           />
         ) : (
           <div className="flex aspect-[3/4] w-full flex-col items-center justify-center gap-2 p-4 text-muted-foreground">

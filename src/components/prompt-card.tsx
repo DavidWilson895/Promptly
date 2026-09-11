@@ -1,5 +1,6 @@
 import { Heart } from "lucide-react";
 import type { Prompt } from "@/lib/data";
+import { PixelImage } from "@/components/pixel-image";
 
 export function PromptCard({
   prompt,
@@ -16,11 +17,10 @@ export function PromptCard({
         className="relative block w-full overflow-hidden bg-muted text-left"
         aria-label={`View prompt: ${prompt.title}`}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <PixelImage
           src={prompt.image}
           alt=""
-          className="h-auto w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+          imgClassName="transition-transform duration-300 ease-out group-hover:scale-[1.03]"
         />
         <div className="absolute inset-0 ring-1 ring-black/5 group-hover:ring-black/10" aria-hidden="true" />
         <div className="absolute left-2.5 top-2.5 flex items-center gap-1.5">
