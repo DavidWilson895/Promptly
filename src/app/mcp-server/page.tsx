@@ -122,9 +122,9 @@ export default function McpServerPage() {
 
   return (
     <div className="min-h-screen bg-background pt-14">
-      <div className="mx-auto flex w-full max-w-[1500px] items-start justify-center">
+      <div className="mx-auto flex w-full max-w-[1760px] items-start justify-center">
         {/* Left rail */}
-        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 shrink-0 overflow-y-auto px-2 py-2 md:block lg:w-72">
+        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 shrink-0 overflow-y-auto px-2 py-2 md:block lg:w-72 xl:w-80">
           <ShopSidebar
             category={category}
             onCategory={(c) => {
@@ -255,7 +255,7 @@ export default function McpServerPage() {
 
           {/* Feed */}
           {filtered.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 min-[1800px]:grid-cols-4">
               {filtered.map((server) => (
                 <FeedCard
                   key={server.id}
