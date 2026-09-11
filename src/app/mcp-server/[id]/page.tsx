@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -149,6 +150,13 @@ export default function McpServerDetailPage() {
       .sort((a, b) => metricsOf(b).upvotes - metricsOf(a).upvotes);
   }
   related = related.slice(0, 5);
+
+  const skills = related
+    .flatMap((s) => s.tools.slice(0, 2).map((tool) => ({ tool, source: s })))
+    .filter(
+      ({ tool }, i, arr) => arr.findIndex((x) => x.tool === tool) === i
+    )
+    .slice(0, 4);
 
   return (
     <div className="min-h-screen bg-background pt-14">
@@ -375,38 +383,127 @@ export default function McpServerDetailPage() {
 
           {/* Related sidebar */}
           <aside className="min-w-0">
-            <div className="rounded-2xl bg-muted p-4 lg:sticky lg:top-20">
-              <h2 className="text-lg font-extrabold">Related MCPs</h2>
-              <div className="mt-2 flex flex-col">
-                {related.map((s) => {
-                  const rav = avatarOf(s);
-                  return (
+            <div className="flex flex-col gap-4 lg:sticky lg:top-20">
+              {/* House ad */}
+              <div>
+                <div className="overflow-hidden rounded-2xl border border-border bg-card text-center shadow-sm">
+                  <div className="flex flex-col items-center px-5 pb-5 pt-6">
+                    <Image
+                      src="/logo.svg"
+                      alt="Promptly"
+                      width={40}
+                      height={40}
+                      className="h-10 w-auto rounded-lg"
+                    />
+                    <p className="mt-3 text-xl font-bold leading-snug tracking-tight">
+                      Your stack,
+                      <br />
+                      everywhere.
+                    </p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                      Save MCP servers once,
+                      <br />
+                      install them anywhere.
+                    </p>
                     <Link
-                      key={s.id}
-                      href={`/mcp-server/${s.id}`}
+                      href="/my-library"
+                      className="mt-4 rounded-full border border-border px-4 py-1.5 text-sm font-bold transition-colors hover:border-foreground/40"
+                    >
+                      OPEN MY LIBRARY
+                    </Link>
+                  </div>
+                </div>
+                <p className="mt-1.5 text-center text-xs text-muted-foreground">
+                  Advertisement
+                </p>
+              </div>
+
+              {/* Related MCPs */}
+              <section
+                className="rounded-2xl bg-muted p-4"
+                aria-label="Related MCPs"
+              >
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-extrabold">Related MCPs</h2>
+                  <Link
+                    href="/mcp-server"
+                    className="text-sm text-muted-foreground hover:text-foreground hover:underline"
+                  >
+                    View more
+                  </Link>
+                </div>
+                <div className="mt-2 flex flex-col">
+                  {related.map((s) => {
+                    const rav = avatarOf(s);
+                    return (
+                      <Link
+                        key={s.id}
+                        href={`/mcp-server/${s.id}`}
+                        className="flex w-full items-start gap-2.5 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-black/[0.04]"
+                      >
+                        <span
+                          className={cn(
+                            "flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-sm font-bold text-white",
+                            rav.gradient
+                          )}
+                          aria-hidden="true"
+                        >
+                          {rav.letter}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block truncate text-base font-bold leading-tight">
+                            {s.name}
+                          </span>
+                          <span className="block line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            {s.description}
+                          </span>
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
+
+              {/* Related Skills */}
+              <section
+                className="rounded-2xl bg-muted p-4"
+                aria-label="Related Skills"
+              >
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-extrabold">Related Skills</h2>
+                  <Link
+                    href="/mcp-server"
+                    className="text-sm text-muted-foreground hover:text-foreground hover:underline"
+                  >
+                    View all
+                  </Link>
+                </div>
+                <div className="mt-2 flex flex-col">
+                  {skills.map(({ tool, source }) => (
+                    <Link
+                      key={tool}
+                      href={`/mcp-server/${source.id}`}
                       className="flex w-full items-start gap-2.5 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-black/[0.04]"
                     >
                       <span
-                        className={cn(
-                          "flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-sm font-bold text-white",
-                          rav.gradient
-                        )}
+                        className="flex size-8 shrink-0 items-center justify-center rounded-full bg-background text-base"
                         aria-hidden="true"
                       >
-                        {rav.letter}
+                        {source.icon}
                       </span>
                       <span className="min-w-0">
                         <span className="block truncate text-base font-bold leading-tight">
-                          {s.name}
+                          {humanize(tool)}
                         </span>
-                        <span className="block truncate text-sm text-muted-foreground">
-                          {s.description}
+                        <span className="block line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Run {tool} via the {source.name} server —{" "}
+                          {source.category.toLowerCase()} automation.
                         </span>
                       </span>
                     </Link>
-                  );
-                })}
-              </div>
+                  ))}
+                </div>
+              </section>
             </div>
           </aside>
         </div>
