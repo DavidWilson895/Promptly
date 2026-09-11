@@ -5,9 +5,11 @@ import { PixelImage } from "@/components/pixel-image";
 export function PromptCard({
   prompt,
   onOpen,
+  index,
 }: {
   prompt: Prompt;
   onOpen: (prompt: Prompt) => void;
+  index?: number;
 }) {
   return (
     <article className="group break-inside-avoid overflow-hidden rounded-xl border bg-card shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/10">
@@ -20,6 +22,7 @@ export function PromptCard({
         <PixelImage
           src={prompt.image}
           alt=""
+          index={index}
           imgClassName="transition-transform duration-300 ease-out group-hover:scale-[1.03]"
         />
         <div className="absolute inset-0 ring-1 ring-black/5 group-hover:ring-black/10" aria-hidden="true" />

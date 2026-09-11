@@ -360,7 +360,7 @@ export function PromptOverlay({
           <div>
             <h3 className="text-sm font-medium">More Inspiration</h3>
             <div className="mt-3 grid grid-cols-2 gap-2">
-              {related.map((r) => (
+              {related.map((r, i) => (
                 <button
                   key={r.id}
                   type="button"
@@ -383,6 +383,7 @@ export function PromptOverlay({
                     replayOnHover={false}
                     duration={0.7}
                     pixelSize={10}
+                    index={i}
                     className="size-full"
                     imgClassName="transition-transform duration-200 group-hover:scale-[1.03]"
                   />

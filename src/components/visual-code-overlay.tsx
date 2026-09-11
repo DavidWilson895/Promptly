@@ -255,7 +255,7 @@ export function VisualCodeOverlay({
             <div>
               <h3 className="text-sm font-medium">More in {groupName(item.group)}</h3>
               <div className="mt-3 grid grid-cols-2 gap-2">
-                {related.map((r) => {
+                {related.map((r, i) => {
                   const rimgs = r.images.length > 0 ? r.images : r.image ? [r.image] : [];
                   return (
                     <button
@@ -277,6 +277,7 @@ export function VisualCodeOverlay({
                           replayOnHover={false}
                           duration={0.7}
                           pixelSize={10}
+                          index={i}
                           className="size-full"
                           imgClassName="transition-transform duration-200 group-hover:scale-[1.03]"
                         />

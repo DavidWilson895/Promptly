@@ -8,9 +8,11 @@ import { categoryOf, type VisualCode } from "@/lib/visual-codes";
 export function VisualCodeCard({
   code,
   onOpen,
+  index,
 }: {
   code: VisualCode;
   onOpen: (code: VisualCode) => void;
+  index?: number;
 }) {
   const images = code.images.length > 0 ? code.images : code.image ? [code.image] : [];
   const src = images[0] ?? "";
@@ -27,6 +29,7 @@ export function VisualCodeCard({
           <PixelImage
             src={src}
             alt=""
+            index={index}
             imgClassName="transition-transform duration-300 ease-out group-hover:scale-[1.03]"
           />
         ) : (

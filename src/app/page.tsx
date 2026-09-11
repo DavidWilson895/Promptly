@@ -218,8 +218,8 @@ export default function HomePage() {
         {mode === "image" ? (
           filtered.length > 0 ? (
             <div className="columns-2 gap-3 space-y-3 pt-4 sm:gap-4 sm:space-y-4 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6">
-              {filtered.map((prompt) => (
-                <PromptCard key={prompt.id} prompt={prompt} onOpen={openPrompt} />
+              {filtered.map((prompt, i) => (
+                <PromptCard key={prompt.id} prompt={prompt} onOpen={openPrompt} index={i} />
               ))}
             </div>
           ) : (
@@ -244,8 +244,8 @@ export default function HomePage() {
           )
         ) : filteredCodes.length > 0 ? (
           <div className="columns-2 gap-3 space-y-3 pt-4 sm:gap-4 sm:space-y-4 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6">
-            {filteredCodes.map((code) => (
-              <VisualCodeCard key={code.id} code={code} onOpen={openCode} />
+            {filteredCodes.map((code, i) => (
+              <VisualCodeCard key={code.id} code={code} onOpen={openCode} index={i} />
             ))}
           </div>
         ) : (

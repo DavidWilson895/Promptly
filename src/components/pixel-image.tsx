@@ -101,6 +101,7 @@ export function PixelImage({
   replayOnHover = true,
   eager = false,
   fill = false,
+  index,
   className,
   imgClassName,
 }: {
@@ -119,6 +120,8 @@ export function PixelImage({
   eager?: boolean;
   /** Fill the frame (frame must have its own size). */
   fill?: boolean;
+  /** Grid position — staggers the load so images don't all fire at once. */
+  index?: number;
   className?: string;
   imgClassName?: string;
 }) {
@@ -131,6 +134,40 @@ export function PixelImage({
   const [frameSize, setFrameSize] = useState({ width: 0, height: 0 });
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
+  // Only start fetching once the frame is near the viewport, staggered by
+  // grid position so a full page of images doesn't all fire at once.
+  const [inView, setInView] = useState(false);
+  const [loadSrc, setLoadSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    const frame = frameRef.current;
+    if (!frame || typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "400px" }
+    );
+    io.observe(frame);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView) return;
+    const wait = index === undefined ? 0 : Math.min(index * 60, 900);
+    if (wait === 0) {
+      setLoadSrc(src);
+      return;
+    }
+    const t = setTimeout(() => setLoadSrc(src), wait);
+    return () => clearTimeout(t);
+  }, [inView, src, index]);
 
   const markReady = useCallback(() => {
     const img = imgRef.current;
@@ -145,9 +182,9 @@ export function PixelImage({
     if (img) {
       img.style.opacity = "0";
       img.style.filter = "blur(0px)";
-      if (img.complete && img.naturalWidth > 0) setReady(true);
+      if (loadSrc && img.complete && img.naturalWidth > 0) setReady(true);
     }
-  }, [src]);
+  }, [loadSrc]);
 
   // Track frame size for the canvas.
   useEffect(() => {
@@ -252,10 +289,11 @@ export function PixelImage({
         // eslint-disable-next-line @next/next/no-img-element
         <img
           ref={imgRef}
-          src={src}
+          src={loadSrc ?? undefined}
           alt={alt}
           draggable={false}
           loading={eager ? "eager" : "lazy"}
+          decoding="async"
           onLoad={markReady}
           onError={() => setFailed(true)}
           className={cn(
