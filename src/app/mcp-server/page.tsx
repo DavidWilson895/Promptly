@@ -255,7 +255,7 @@ export default function McpServerPage() {
 
           {/* Feed */}
           {filtered.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 min-[1500px]:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
               {filtered.map((server) => (
                 <FeedCard
                   key={server.id}
@@ -293,7 +293,7 @@ export default function McpServerPage() {
         </section>
 
         {/* Right rail */}
-        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-[350px] shrink-0 overflow-y-auto px-7 py-3 xl:block">
+        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-[350px] shrink-0 overflow-y-auto px-7 py-3 2xl:block">
           <RightRail
             query={query}
             onQuery={setQuery}
