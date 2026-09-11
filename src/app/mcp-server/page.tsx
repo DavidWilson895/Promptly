@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { BadgeCheck, Bookmark, Search, X } from "lucide-react";
 import { FeedCard } from "@/components/mcp/feed-card";
 import { ShopSidebar } from "@/components/mcp/shop-sidebar";
-import { RightRail } from "@/components/mcp/right-rail";
 import { CartPanel } from "@/components/mcp/cart-panel";
 import {
   MCP_SERVERS,
@@ -33,7 +32,6 @@ export default function McpServerPage() {
   const [savedOnly, setSavedOnly] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
-  const [followedOrgs, setFollowedOrgs] = useState<Set<string>>(new Set());
   const { stack, toggle: toggleStack } = useStack();
   const [cartOpen, setCartOpen] = useState(false);
   const feedTopRef = useRef<HTMLDivElement>(null);
@@ -139,6 +137,10 @@ export default function McpServerPage() {
             savedOnly={savedOnly}
             onSavedOnly={setSavedOnly}
             savedCount={bookmarked.size}
+            onQuery={(q) => {
+              setQuery(q);
+              scrollFeedTop();
+            }}
           />
         </aside>
 
@@ -254,7 +256,7 @@ export default function McpServerPage() {
 
           {/* Feed */}
           {filtered.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 min-[1800px]:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {filtered.map((server) => (
                 <FeedCard
                   key={server.id}
@@ -285,20 +287,6 @@ export default function McpServerPage() {
             </div>
           )}
         </section>
-
-        {/* Right rail */}
-        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-[350px] shrink-0 overflow-y-auto px-7 py-3 2xl:block">
-          <RightRail
-            query={query}
-            onQuery={setQuery}
-            onCategory={(c) => {
-              setCategory(c);
-              scrollFeedTop();
-            }}
-            followedOrgs={followedOrgs}
-            onToggleFollow={(org) => toggle(setFollowedOrgs, org)}
-          />
-        </aside>
       </div>
 
       <CartPanel

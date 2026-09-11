@@ -107,6 +107,11 @@ export function FeedCard({
             {t}
           </Badge>
         ))}
+        {server.tags.length > 2 ? (
+          <span className="text-xs tabular-nums text-muted-foreground">
+            +{server.tags.length - 2}
+          </span>
+        ) : null}
       </div>
       <p className="mt-1.5 line-clamp-2 text-base leading-snug text-foreground">
         {server.description}

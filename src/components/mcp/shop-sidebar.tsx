@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import {
   Activity,
   BadgeCheck,
@@ -16,6 +18,8 @@ import {
 import {
   MCP_SERVERS,
   MCP_CATEGORIES,
+  avatarOf,
+  metricsOf,
 } from "@/lib/mcp-servers";
 import { cn } from "@/lib/utils";
 
@@ -73,6 +77,7 @@ export function ShopSidebar({
   savedOnly,
   onSavedOnly,
   savedCount,
+  onQuery,
 }: {
   category: string;
   onCategory: (c: string) => void;
@@ -83,9 +88,29 @@ export function ShopSidebar({
   savedOnly: boolean;
   onSavedOnly: (v: boolean) => void;
   savedCount: number;
+  onQuery: (q: string) => void;
 }) {
   const prices = ["All", "Free", "Freemium", "Paid"] as const;
   const verifiedCount = MCP_SERVERS.filter((s) => s.verified).length;
+
+  const topRated = useMemo(
+    () =>
+      [...MCP_SERVERS]
+        .sort((a, b) => metricsOf(b).rating - metricsOf(a).rating)
+        .slice(0, 5),
+    []
+  );
+
+  const trendingTags = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const s of MCP_SERVERS) {
+      for (const t of s.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+    }
+    return [...counts.entries()]
+      .map(([tag, count]) => ({ tag, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+  }, []);
 
   return (
     <div className="flex flex-col gap-1 py-2">
@@ -176,6 +201,61 @@ export function ShopSidebar({
             )}
           >
             {p}
+          </button>
+        ))}
+      </div>
+
+      <p className="px-3 pb-1 pt-5 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+        Top rated
+      </p>
+      <div className="flex flex-col" aria-label="Top rated">
+        {topRated.map((s) => {
+          const m = metricsOf(s);
+          const av = avatarOf(s);
+          return (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => onCategory(s.category)}
+              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-1.5 text-left transition-colors hover:bg-muted"
+            >
+              <span
+                className={cn(
+                  "flex size-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-[11px] font-bold text-white",
+                  av.gradient
+                )}
+                aria-hidden="true"
+              >
+                {av.letter}
+              </span>
+              <span className="min-w-0 flex-1 truncate text-base">
+                {s.name}
+              </span>
+              <span className="shrink-0 text-sm font-bold tabular-nums">
+                {m.rating.toFixed(1)}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <p className="px-3 pb-1 pt-5 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+        Trending tags
+      </p>
+      <div className="flex flex-col pb-4" aria-label="Trending tags">
+        {trendingTags.map((t) => (
+          <button
+            key={t.tag}
+            type="button"
+            onClick={() => onQuery(t.tag)}
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left transition-colors hover:bg-muted"
+          >
+            <span className="min-w-0 flex-1 truncate text-base">
+              <span className="font-medium">#{t.tag}</span>
+            </span>
+            <span className="shrink-0 text-sm tabular-nums text-muted-foreground">
+              {t.count}
+            </span>
           </button>
         ))}
       </div>

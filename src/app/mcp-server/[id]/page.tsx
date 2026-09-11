@@ -70,26 +70,54 @@ function CodeBlock({
   language,
   copied,
   onCopy,
+  dark,
 }: {
   code: string;
   language: string;
   copied: boolean;
   onCopy: () => void;
+  dark?: boolean;
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border">
-      <div className="flex items-center justify-between border-b border-border bg-muted/60 px-4 py-2">
-        <span className="font-mono text-xs text-muted-foreground">
+    <div
+      className={cn(
+        "overflow-hidden rounded-xl border",
+        dark ? "border-neutral-800" : "border-border"
+      )}
+    >
+      <div
+        className={cn(
+          "flex items-center justify-between border-b px-4 py-2",
+          dark ? "border-neutral-800 bg-neutral-900" : "border-border bg-muted/60"
+        )}
+      >
+        <span
+          className={cn(
+            "font-mono text-xs",
+            dark ? "text-neutral-400" : "text-muted-foreground"
+          )}
+        >
           {language}
         </span>
         <button
           type="button"
           onClick={onCopy}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className={cn(
+            "flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors",
+            dark
+              ? "text-neutral-400 hover:bg-white/10 hover:text-white"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          )}
         >
           {copied ? (
             <>
-              <Check className="size-3.5 text-emerald-600" /> Copied
+              <Check
+                className={cn(
+                  "size-3.5",
+                  dark ? "text-emerald-400" : "text-emerald-600"
+                )}
+              />{" "}
+              Copied
             </>
           ) : (
             <>
@@ -98,7 +126,12 @@ function CodeBlock({
           )}
         </button>
       </div>
-      <pre className="overflow-x-auto bg-muted/30 p-4 font-mono text-[13px] leading-relaxed">
+      <pre
+        className={cn(
+          "overflow-x-auto p-4 font-mono text-[13px] leading-relaxed",
+          dark ? "bg-neutral-950 text-neutral-100" : "bg-muted/30"
+        )}
+      >
         {code}
       </pre>
     </div>
@@ -183,7 +216,7 @@ export default function McpServerDetailPage() {
                 {av.letter}
               </span>
               <div className="min-w-0">
-                <h1 className="truncate text-3xl font-bold tracking-tight">
+                <h1 className="truncate font-sans text-3xl font-bold tracking-tight">
                   {server.name}
                 </h1>
                 <p className="mt-0.5 flex items-center gap-1 text-base text-muted-foreground">
@@ -205,18 +238,23 @@ export default function McpServerDetailPage() {
               {server.description}
             </p>
 
-            <div className="mt-4 flex items-center gap-2 rounded-lg border border-border bg-muted/60 px-3 py-2.5">
-              <code className="min-w-0 flex-1 truncate font-mono text-sm">
+            <div className="mt-4 flex items-center gap-2.5 rounded-xl border border-neutral-800 bg-neutral-900 px-3.5 py-3 shadow-sm">
+              <span className="flex shrink-0 items-center gap-1.5" aria-hidden="true">
+                <span className="size-2.5 rounded-full bg-[#FF5F57]" />
+                <span className="size-2.5 rounded-full bg-[#FEBC2E]" />
+                <span className="size-2.5 rounded-full bg-[#28C840]" />
+              </span>
+              <code className="min-w-0 flex-1 truncate font-mono text-sm text-neutral-100">
                 {server.install}
               </code>
               <button
                 type="button"
                 onClick={() => doCopy(server.install, "install")}
                 aria-label="Copy install command"
-                className="shrink-0 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="shrink-0 rounded-md p-1.5 text-neutral-400 transition-colors hover:bg-white/10 hover:text-white"
               >
                 {copiedKey === "install" ? (
-                  <Check className="size-4 text-emerald-600" />
+                  <Check className="size-4 text-emerald-400" />
                 ) : (
                   <Copy className="size-4" />
                 )}
@@ -291,7 +329,7 @@ export default function McpServerDetailPage() {
 
             {/* README */}
             <div className="mt-6 rounded-xl border border-border p-5 sm:p-6">
-              <h2 className="font-mono text-lg font-bold">{server.id}</h2>
+              <h2 className="font-sans text-lg font-bold">{server.id}</h2>
               <p className="mt-2 leading-relaxed text-foreground">
                 {server.description} Connect it once and your assistant can{" "}
                 {server.tools
@@ -304,7 +342,7 @@ export default function McpServerDetailPage() {
                 without leaving the chat.
               </p>
 
-              <h3 className="mt-6 text-xl font-bold">Start here</h3>
+              <h3 className="mt-6 font-sans text-xl font-bold">Start here</h3>
               <p className="mt-2 leading-relaxed text-foreground">
                 Install the server, paste the configuration below into your
                 client, and restart. Your assistant picks up{" "}
@@ -315,17 +353,7 @@ export default function McpServerDetailPage() {
                 {server.org} already requires.
               </p>
 
-              <h3 className="mt-6 text-xl font-bold">Installation</h3>
-              <div className="mt-2">
-                <CodeBlock
-                  code={server.install}
-                  language="bash"
-                  copied={copiedKey === "readme-install"}
-                  onCopy={() => doCopy(server.install, "readme-install")}
-                />
-              </div>
-
-              <h3 className="mt-6 text-xl font-bold">Configuration</h3>
+              <h3 className="mt-6 font-sans text-xl font-bold">Configuration</h3>
               <p className="mb-2 mt-2 leading-relaxed text-foreground">
                 Add this to your client config (e.g.{" "}
                 <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-sm">
@@ -338,9 +366,10 @@ export default function McpServerDetailPage() {
                 language="json"
                 copied={copiedKey === "config"}
                 onCopy={() => doCopy(configJson(server), "config")}
+                dark
               />
 
-              <h3 className="mt-6 text-xl font-bold">Available tools</h3>
+              <h3 className="mt-6 font-sans text-xl font-bold">Available tools</h3>
               <div className="mt-2 flex flex-col gap-2">
                 {server.tools.map((tool) => (
                   <div
@@ -355,7 +384,7 @@ export default function McpServerDetailPage() {
                 ))}
               </div>
 
-              <h3 className="mt-6 text-xl font-bold">
+              <h3 className="mt-6 font-sans text-xl font-bold">
                 Why {server.name.toLowerCase()}
               </h3>
               <ul className="mt-2 flex list-disc flex-col gap-1.5 pl-5 leading-relaxed">
@@ -384,38 +413,31 @@ export default function McpServerDetailPage() {
           {/* Related sidebar */}
           <aside className="min-w-0">
             <div className="flex flex-col gap-4 lg:sticky lg:top-20">
-              {/* House ad */}
-              <div>
-                <div className="overflow-hidden rounded-2xl border border-border bg-card text-center shadow-sm">
-                  <div className="flex flex-col items-center px-5 pb-5 pt-6">
-                    <Image
-                      src="/logo.svg"
-                      alt="Promptly"
-                      width={40}
-                      height={40}
-                      className="h-10 w-auto rounded-lg"
-                    />
-                    <p className="mt-3 text-xl font-bold leading-snug tracking-tight">
-                      Your stack,
-                      <br />
-                      everywhere.
+              {/* Your stack feature card */}
+              <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+                <div className="flex items-center gap-3 p-4">
+                  <Image
+                    src="/logo.svg"
+                    alt="Promptly"
+                    width={36}
+                    height={36}
+                    className="h-9 w-auto shrink-0 rounded-lg"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="font-sans font-bold leading-tight">
+                      Your stack, everywhere.
                     </p>
-                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                      Save MCP servers once,
-                      <br />
-                      install them anywhere.
+                    <p className="mt-0.5 truncate text-sm text-muted-foreground">
+                      Save servers once, install anywhere.
                     </p>
-                    <Link
-                      href="/my-library"
-                      className="mt-4 rounded-full border border-border px-4 py-1.5 text-sm font-bold transition-colors hover:border-foreground/40"
-                    >
-                      OPEN MY LIBRARY
-                    </Link>
                   </div>
+                  <Link
+                    href="/my-library"
+                    className="shrink-0 rounded-full bg-foreground px-3.5 py-1.5 text-sm font-bold text-background transition-opacity hover:opacity-90"
+                  >
+                    Open
+                  </Link>
                 </div>
-                <p className="mt-1.5 text-center text-xs text-muted-foreground">
-                  Advertisement
-                </p>
               </div>
 
               {/* Related MCPs */}
@@ -424,7 +446,7 @@ export default function McpServerDetailPage() {
                 aria-label="Related MCPs"
               >
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-extrabold">Related MCPs</h2>
+                  <h2 className="font-sans text-lg font-extrabold">Related MCPs</h2>
                   <Link
                     href="/mcp-server"
                     className="text-sm text-muted-foreground hover:text-foreground hover:underline"
@@ -470,7 +492,7 @@ export default function McpServerDetailPage() {
                 aria-label="Related Skills"
               >
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-extrabold">Related Skills</h2>
+                  <h2 className="font-sans text-lg font-extrabold">Related Skills</h2>
                   <Link
                     href="/mcp-server"
                     className="text-sm text-muted-foreground hover:text-foreground hover:underline"
