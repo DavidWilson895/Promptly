@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { BadgeCheck, Bookmark, Search, X } from "lucide-react";
-import { FeedPost } from "@/components/mcp/feed-post";
+import { FeedCard } from "@/components/mcp/feed-card";
 import { ShopSidebar } from "@/components/mcp/shop-sidebar";
 import { RightRail } from "@/components/mcp/right-rail";
 import { CartPanel } from "@/components/mcp/cart-panel";
@@ -255,9 +255,9 @@ export default function McpServerPage() {
 
           {/* Feed */}
           {filtered.length > 0 ? (
-            <div>
+            <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 min-[1500px]:grid-cols-3">
               {filtered.map((server) => (
-                <FeedPost
+                <FeedCard
                   key={server.id}
                   server={server}
                   upvoted={upvoted.has(server.id)}
