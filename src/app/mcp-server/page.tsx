@@ -176,7 +176,7 @@ export default function McpServerPage() {
                   >
                     {t.label}
                     {active ? (
-                      <span className="absolute inset-x-16 bottom-0 h-1 rounded-full bg-sky-500" />
+                      <span className="absolute bottom-0 left-1/2 h-1 w-14 -translate-x-1/2 rounded-full bg-sky-500" />
                     ) : null}
                   </button>
                 );
