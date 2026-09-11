@@ -36,6 +36,7 @@ export default function McpServerPage() {
   const { stack, toggle: toggleStack } = useStack();
   const [cartOpen, setCartOpen] = useState(false);
   const feedTopRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -261,8 +262,8 @@ export default function McpServerPage() {
           {/* Feed */}
           {filtered.length > 0 ? (
             <div className="relative">
-              <MagneticGrid />
-              <div className="relative grid grid-cols-1 gap-6 p-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <MagneticGrid alignRef={gridRef} />
+              <div ref={gridRef} className="relative grid grid-cols-1 gap-6 p-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {filtered.map((server) => (
                 <FeedCard
                   key={server.id}
