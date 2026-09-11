@@ -10,6 +10,7 @@ import {
   Database,
   FlaskConical,
   Globe,
+  House,
   MessagesSquare,
   Palette,
   Rocket,
@@ -33,39 +34,6 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   "Data & Analytics": BarChart3,
   Communication: MessagesSquare,
 };
-
-function NavRow({
-  icon: Icon,
-  label,
-  active,
-  onClick,
-  badge,
-}: {
-  icon: LucideIcon;
-  label: string;
-  active?: boolean;
-  onClick?: () => void;
-  badge?: number;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className="flex w-fit items-center gap-4 rounded-full p-3 text-xl transition-colors hover:bg-muted"
-    >
-      <Icon className="size-7 shrink-0" aria-hidden="true" />
-      <span className={cn("truncate", active ? "font-extrabold" : undefined)}>
-        {label}
-      </span>
-      {badge !== undefined && badge > 0 ? (
-        <span className="rounded-full bg-sky-500 px-2 py-0.5 text-sm font-bold text-white">
-          {badge}
-        </span>
-      ) : null}
-    </button>
-  );
-}
 
 export function ShopSidebar({
   category,
@@ -114,24 +82,7 @@ export function ShopSidebar({
 
   return (
     <div className="flex flex-col gap-1 py-2">
-      <nav className="flex flex-col" aria-label="Marketplace">
-        <NavRow
-          icon={Bookmark}
-          label="Saved"
-          active={savedOnly}
-          onClick={() => onSavedOnly(!savedOnly)}
-          badge={savedCount}
-        />
-        <NavRow
-          icon={BadgeCheck}
-          label="Verified"
-          active={verifiedOnly}
-          onClick={() => onVerifiedOnly(!verifiedOnly)}
-          badge={verifiedCount}
-        />
-      </nav>
-
-      <p className="px-3 pb-1 pt-5 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+      <p className="px-3 pb-1 text-sm font-bold uppercase tracking-wide text-muted-foreground">
         Browse
       </p>
       <div className="flex flex-col" aria-label="Categories">
@@ -141,7 +92,7 @@ export function ShopSidebar({
           className="flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-lg transition-colors hover:bg-muted"
           aria-pressed={category === "All"}
         >
-          <FlaskConical className="size-6 shrink-0 text-muted-foreground" />
+          <House className="size-6 shrink-0 text-muted-foreground" />
           <span
             className={cn(
               "flex-1 truncate",
@@ -209,6 +160,58 @@ export function ShopSidebar({
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 px-3 pt-3">
+        <button
+          type="button"
+          onClick={() => onSavedOnly(!savedOnly)}
+          aria-pressed={savedOnly}
+          className={cn(
+            "flex items-center justify-center gap-1.5 rounded-full border px-2 py-1.5 text-sm font-bold transition-colors",
+            savedOnly
+              ? "border-foreground bg-foreground text-background"
+              : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
+          )}
+        >
+          <Bookmark
+            className={cn("size-4", savedOnly && "fill-current")}
+            aria-hidden="true"
+          />
+          Saved
+          {savedCount > 0 ? (
+            <span
+              className={cn(
+                "rounded-full px-1.5 text-xs font-bold tabular-nums",
+                savedOnly ? "bg-background/20" : "bg-sky-500 text-white"
+              )}
+            >
+              {savedCount}
+            </span>
+          ) : null}
+        </button>
+        <button
+          type="button"
+          onClick={() => onVerifiedOnly(!verifiedOnly)}
+          aria-pressed={verifiedOnly}
+          className={cn(
+            "flex items-center justify-center gap-1.5 rounded-full border px-2 py-1.5 text-sm font-bold transition-colors",
+            verifiedOnly
+              ? "border-foreground bg-foreground text-background"
+              : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
+          )}
+        >
+          <BadgeCheck className="size-4" aria-hidden="true" />
+          Verified
+          <span
+            className={cn(
+              "rounded-full px-1.5 text-xs font-bold tabular-nums",
+              verifiedOnly ? "bg-background/20" : "bg-sky-500 text-white"
+            )}
+          >
+            {verifiedCount}
+          </span>
+        </button>
       </div>
 
       <p className="px-3 pb-1 pt-5 text-sm font-bold uppercase tracking-wide text-muted-foreground">
