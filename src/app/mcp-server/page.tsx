@@ -2,9 +2,9 @@
 
 import { useMemo, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/navigation";
 import { BadgeCheck, Bookmark, Search, X } from "lucide-react";
 import { FeedCard } from "@/components/mcp/feed-card";
-import { McpDetailOverlay } from "@/components/mcp/mcp-detail-overlay";
 import { ShopSidebar } from "@/components/mcp/shop-sidebar";
 import { RightRail } from "@/components/mcp/right-rail";
 import { CartPanel } from "@/components/mcp/cart-panel";
@@ -14,6 +14,7 @@ import {
   sortServers,
   type SortKey,
 } from "@/lib/mcp-servers";
+import { useStack } from "@/lib/use-stack";
 import { cn } from "@/lib/utils";
 
 const TABS: { key: SortKey; label: string }[] = [
@@ -23,6 +24,7 @@ const TABS: { key: SortKey; label: string }[] = [
 ];
 
 export default function McpServerPage() {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState<SortKey>("hot");
@@ -31,9 +33,8 @@ export default function McpServerPage() {
   const [savedOnly, setSavedOnly] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [followedOrgs, setFollowedOrgs] = useState<Set<string>>(new Set());
-  const [stack, setStack] = useState<Set<string>>(new Set());
+  const { stack, toggle: toggleStack } = useStack();
   const [cartOpen, setCartOpen] = useState(false);
   const feedTopRef = useRef<HTMLDivElement>(null);
 
@@ -262,7 +263,7 @@ export default function McpServerPage() {
                   shared={copiedId === server.id}
                   onBookmark={() => toggle(setBookmarked, server.id)}
                   onShare={() => copyInstall(server.id)}
-                  onOpen={() => setSelectedId(server.id)}
+                  onOpen={() => router.push(`/mcp-server/${server.id}`)}
                 />
               ))}
             </div>
@@ -300,22 +301,13 @@ export default function McpServerPage() {
         </aside>
       </div>
 
-      <McpDetailOverlay
-        server={MCP_SERVERS.find((s) => s.id === selectedId) ?? null}
-        onClose={() => setSelectedId(null)}
-        onSelect={(s) => setSelectedId(s.id)}
-        inStack={selectedId ? stack.has(selectedId) : false}
-        onToggleStack={() => {
-          if (selectedId) toggle(setStack, selectedId);
-        }}
-      />
       <CartPanel
         stackIds={stack}
         open={cartOpen}
         onOpenChange={setCartOpen}
         copiedAll={copiedId === "__all__"}
         onCopyAll={copyAll}
-        onRemove={(id) => toggle(setStack, id)}
+        onRemove={toggleStack}
       />
     </div>
   );

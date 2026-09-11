@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import {
+  ArrowLeft,
   BadgeCheck,
   Check,
   Copy,
   ShoppingCart,
   Star,
-  X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -16,8 +18,9 @@ import {
   formatCompact,
   metricsOf,
   timeAgo,
-  type McpServer,
 } from "@/lib/mcp-servers";
+import type { McpServer } from "@/lib/mcp-servers";
+import { useStack } from "@/lib/use-stack";
 import { cn } from "@/lib/utils";
 
 const PRICE_STYLES: Record<string, string> = {
@@ -101,43 +104,35 @@ function CodeBlock({
   );
 }
 
-export function McpDetailOverlay({
-  server,
-  onClose,
-  onSelect,
-  inStack,
-  onToggleStack,
-}: {
-  server: McpServer | null;
-  onClose: () => void;
-  onSelect: (s: McpServer) => void;
-  inStack: boolean;
-  onToggleStack: () => void;
-}) {
+export default function McpServerDetailPage() {
+  const params = useParams();
+  const raw = params.id;
+  const id = Array.isArray(raw) ? raw[0] : raw ?? "";
+  const server = MCP_SERVERS.find((s) => s.id === id) ?? null;
+  const { stack, toggle } = useStack();
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!server) return;
-    setCopiedKey(null);
-    panelRef.current?.scrollTo({ top: 0 });
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [server, onClose]);
-
-  if (!server) return null;
+  if (!server) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-background px-4 pt-14 text-center">
+        <p className="text-xl font-bold">Server not found</p>
+        <p className="text-base text-muted-foreground">
+          This MCP server doesn&apos;t exist or was removed.
+        </p>
+        <Link
+          href="/mcp-server"
+          className="mt-1 rounded-full bg-foreground px-5 py-2 text-base font-bold text-background hover:opacity-90"
+        >
+          Back to marketplace
+        </Link>
+      </div>
+    );
+  }
 
   const m = metricsOf(server);
   const av = avatarOf(server);
   const handle = `@${server.org.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
+  const inStack = stack.has(server.id);
 
   function doCopy(text: string, key: string) {
     void copyText(text);
@@ -156,31 +151,19 @@ export function McpDetailOverlay({
   related = related.slice(0, 5);
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 sm:items-center sm:p-6"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`${server.name} details`}
-    >
-      <div
-        ref={panelRef}
-        onClick={(e) => e.stopPropagation()}
-        className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl bg-background shadow-2xl"
-      >
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close details"
-          className="absolute right-4 top-4 z-10 rounded-full bg-muted p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+    <div className="min-h-screen bg-background pt-14">
+      <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6 sm:px-6">
+        <Link
+          href="/mcp-server"
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
-          <X className="size-5" />
-        </button>
+          <ArrowLeft className="size-4" aria-hidden="true" />
+          All servers
+        </Link>
 
-        <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1fr_280px]">
+        <div className="mt-4 grid gap-8 lg:grid-cols-[1fr_280px]">
           {/* Main */}
           <div className="min-w-0">
-            {/* Title block */}
             <div className="flex items-center gap-4">
               <span
                 className={cn(
@@ -192,9 +175,9 @@ export function McpDetailOverlay({
                 {av.letter}
               </span>
               <div className="min-w-0">
-                <h2 className="truncate text-3xl font-bold tracking-tight">
+                <h1 className="truncate text-3xl font-bold tracking-tight">
                   {server.name}
-                </h2>
+                </h1>
                 <p className="mt-0.5 flex items-center gap-1 text-base text-muted-foreground">
                   by {server.org}
                   {server.verified ? (
@@ -214,7 +197,6 @@ export function McpDetailOverlay({
               {server.description}
             </p>
 
-            {/* Install bar */}
             <div className="mt-4 flex items-center gap-2 rounded-lg border border-border bg-muted/60 px-3 py-2.5">
               <code className="min-w-0 flex-1 truncate font-mono text-sm">
                 {server.install}
@@ -233,11 +215,10 @@ export function McpDetailOverlay({
               </button>
             </div>
 
-            {/* Actions */}
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <button
                 type="button"
-                onClick={onToggleStack}
+                onClick={() => toggle(server.id)}
                 className={cn(
                   "flex items-center gap-1.5 rounded-full px-5 py-2 text-base font-bold transition-colors",
                   inStack
@@ -276,7 +257,6 @@ export function McpDetailOverlay({
               </span>
             </div>
 
-            {/* Meta chips */}
             <div className="mt-4 flex flex-wrap items-center gap-1.5">
               <Badge
                 variant="outline"
@@ -303,7 +283,7 @@ export function McpDetailOverlay({
 
             {/* README */}
             <div className="mt-6 rounded-xl border border-border p-5 sm:p-6">
-              <h3 className="font-mono text-lg font-bold">{server.id}</h3>
+              <h2 className="font-mono text-lg font-bold">{server.id}</h2>
               <p className="mt-2 leading-relaxed text-foreground">
                 {server.description} Connect it once and your assistant can{" "}
                 {server.tools
@@ -316,7 +296,7 @@ export function McpDetailOverlay({
                 without leaving the chat.
               </p>
 
-              <h4 className="mt-6 text-xl font-bold">Start here</h4>
+              <h3 className="mt-6 text-xl font-bold">Start here</h3>
               <p className="mt-2 leading-relaxed text-foreground">
                 Install the server, paste the configuration below into your
                 client, and restart. Your assistant picks up{" "}
@@ -327,7 +307,7 @@ export function McpDetailOverlay({
                 {server.org} already requires.
               </p>
 
-              <h4 className="mt-6 text-xl font-bold">Installation</h4>
+              <h3 className="mt-6 text-xl font-bold">Installation</h3>
               <div className="mt-2">
                 <CodeBlock
                   code={server.install}
@@ -337,7 +317,7 @@ export function McpDetailOverlay({
                 />
               </div>
 
-              <h4 className="mt-6 text-xl font-bold">Configuration</h4>
+              <h3 className="mt-6 text-xl font-bold">Configuration</h3>
               <p className="mb-2 mt-2 leading-relaxed text-foreground">
                 Add this to your client config (e.g.{" "}
                 <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-sm">
@@ -352,7 +332,7 @@ export function McpDetailOverlay({
                 onCopy={() => doCopy(configJson(server), "config")}
               />
 
-              <h4 className="mt-6 text-xl font-bold">Available tools</h4>
+              <h3 className="mt-6 text-xl font-bold">Available tools</h3>
               <div className="mt-2 flex flex-col gap-2">
                 {server.tools.map((tool) => (
                   <div
@@ -367,9 +347,9 @@ export function McpDetailOverlay({
                 ))}
               </div>
 
-              <h4 className="mt-6 text-xl font-bold">
+              <h3 className="mt-6 text-xl font-bold">
                 Why {server.name.toLowerCase()}
-              </h4>
+              </h3>
               <ul className="mt-2 flex list-disc flex-col gap-1.5 pl-5 leading-relaxed">
                 <li>
                   Native {server.runtime} package — installs with one command.
@@ -395,16 +375,15 @@ export function McpDetailOverlay({
 
           {/* Related sidebar */}
           <aside className="min-w-0">
-            <div className="rounded-2xl bg-muted p-4 lg:sticky lg:top-0">
-              <h3 className="text-lg font-extrabold">Related MCPs</h3>
+            <div className="rounded-2xl bg-muted p-4 lg:sticky lg:top-20">
+              <h2 className="text-lg font-extrabold">Related MCPs</h2>
               <div className="mt-2 flex flex-col">
                 {related.map((s) => {
                   const rav = avatarOf(s);
                   return (
-                    <button
+                    <Link
                       key={s.id}
-                      type="button"
-                      onClick={() => onSelect(s)}
+                      href={`/mcp-server/${s.id}`}
                       className="flex w-full items-start gap-2.5 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-black/[0.04]"
                     >
                       <span
@@ -424,14 +403,14 @@ export function McpDetailOverlay({
                           {s.description}
                         </span>
                       </span>
-                    </button>
+                    </Link>
                   );
                 })}
               </div>
             </div>
           </aside>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
