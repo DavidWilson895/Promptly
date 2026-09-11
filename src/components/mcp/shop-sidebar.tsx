@@ -210,7 +210,7 @@ export function ShopSidebar({
               className={cn(
                 "px-3 py-1 text-sm font-bold transition-colors",
                 priceFilter === p
-                  ? "bg-foreground text-background"
+                  ? "bg-gradient-to-b from-black to-neutral-800 text-white"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >

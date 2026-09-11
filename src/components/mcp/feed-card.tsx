@@ -18,9 +18,9 @@ import {
 import { cn } from "@/lib/utils";
 
 const PRICE_STYLES: Record<string, string> = {
-  Free: "border border-emerald-200/60 bg-emerald-50/80 text-emerald-700",
-  Freemium: "border border-amber-200/60 bg-amber-50/80 text-amber-700",
-  Paid: "border border-slate-200/60 bg-slate-100 text-slate-700",
+  Free: "border border-neutral-300 bg-white text-black",
+  Freemium: "border border-red-200 bg-white text-red-600",
+  Paid: "border border-black bg-gradient-to-b from-black to-neutral-800 text-white",
 };
 
 export function FeedCard({
