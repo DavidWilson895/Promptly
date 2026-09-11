@@ -25,9 +25,9 @@ import { useStack } from "@/lib/use-stack";
 import { cn } from "@/lib/utils";
 
 const PRICE_STYLES: Record<string, string> = {
-  Free: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  Freemium: "border-amber-200 bg-amber-50 text-amber-700",
-  Paid: "border-slate-200 bg-slate-100 text-slate-700",
+  Free: "border border-emerald-200/60 bg-emerald-50/80 text-emerald-700",
+  Freemium: "border border-amber-200/60 bg-amber-50/80 text-amber-700",
+  Paid: "border border-slate-200/60 bg-slate-100 text-slate-700",
 };
 
 function humanize(tool: string): string {

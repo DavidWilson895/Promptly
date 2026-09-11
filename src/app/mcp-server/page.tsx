@@ -150,7 +150,7 @@ export default function McpServerPage() {
 
           {/* Sort tabs */}
           <div
-            className="sticky top-14 z-30 border-b border-border bg-[#F8FAFC]/85 backdrop-blur-md"
+            className="sticky top-14 z-30 border-b border-slate-200/80 bg-[#F8FAFC]/85 backdrop-blur-md"
             role="tablist"
             aria-label="Sort servers"
           >

@@ -18,9 +18,9 @@ import {
 import { cn } from "@/lib/utils";
 
 const PRICE_STYLES: Record<string, string> = {
-  Free: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  Freemium: "border-amber-200 bg-amber-50 text-amber-700",
-  Paid: "border-slate-200 bg-slate-100 text-slate-700",
+  Free: "border border-emerald-200/60 bg-emerald-50/80 text-emerald-700",
+  Freemium: "border border-amber-200/60 bg-amber-50/80 text-amber-700",
+  Paid: "border border-slate-200/60 bg-slate-100 text-slate-700",
 };
 
 export function FeedCard({
@@ -50,14 +50,19 @@ export function FeedCard({
       tabIndex={0}
       role="button"
       aria-label={`View ${server.name} details`}
-      className="flex cursor-pointer flex-col rounded-xl border border-slate-200/80 bg-card p-4 shadow-xs outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md focus-visible:ring-2 focus-visible:ring-sky-500"
+      className="flex cursor-pointer flex-col rounded-xl border border-slate-200/80 bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] outline-none transition-all duration-200 hover:-translate-y-[2px] hover:border-slate-300 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] focus-visible:ring-2 focus-visible:ring-sky-500"
     >
       {/* Header */}
       <div className="flex items-center gap-2.5">
-        <ServerMark server={server} className="size-10" letterClassName="text-base" />
+        <ServerMark
+          server={server}
+          className="size-8 bg-slate-100/80"
+          roundedClass="rounded-lg border border-slate-200/50"
+          letterClassName="text-xs"
+        />
         <div className="min-w-0 flex-1">
           <p className="flex items-center gap-1">
-            <span className="truncate text-lg font-bold leading-tight">
+            <span className="truncate text-sm font-semibold text-slate-900">
               {server.name}
             </span>
             {server.verified ? (
@@ -67,7 +72,7 @@ export function FeedCard({
               />
             ) : null}
           </p>
-          <p className="truncate font-mono text-xs text-muted-foreground">
+          <p className="truncate font-mono text-[11px] text-slate-400">
             {handle} · {timeAgo(server)}
           </p>
         </div>
@@ -104,18 +109,18 @@ export function FeedCard({
           </span>
         ) : null}
       </div>
-      <p className="mt-1.5 line-clamp-2 text-base leading-snug text-foreground">
+      <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-slate-600">
         {server.description}
       </p>
 
       {/* Stars · Save · Share */}
       <div className="mt-3 flex items-center gap-1 border-t border-border pt-2.5">
         <span
-          className="flex items-center gap-1.5 font-mono text-xs tabular-nums text-muted-foreground"
+          className="flex items-center gap-1.5 text-xs font-medium text-slate-500"
           title={`${server.stars.toLocaleString()} GitHub stars`}
         >
           <Star
-            className="size-[18px] fill-amber-400 text-amber-400"
+            className="size-4 fill-amber-400 text-amber-400"
             aria-hidden="true"
           />
           {formatCompact(server.stars)}
