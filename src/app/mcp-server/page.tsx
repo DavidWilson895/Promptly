@@ -5,6 +5,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { BadgeCheck, Bookmark, Search, X } from "lucide-react";
 import { FeedCard } from "@/components/mcp/feed-card";
+import { MagneticGrid } from "@/components/mcp/magnetic-grid";
 import { ShopSidebar } from "@/components/mcp/shop-sidebar";
 import { CartPanel } from "@/components/mcp/cart-panel";
 import {
@@ -259,7 +260,9 @@ export default function McpServerPage() {
 
           {/* Feed */}
           {filtered.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            <div className="relative">
+              <MagneticGrid />
+              <div className="relative grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {filtered.map((server) => (
                 <FeedCard
                   key={server.id}
@@ -271,6 +274,7 @@ export default function McpServerPage() {
                   onOpen={() => router.push(`/mcp-server/${server.id}`)}
                 />
               ))}
+              </div>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3 px-4 py-16 text-center">
