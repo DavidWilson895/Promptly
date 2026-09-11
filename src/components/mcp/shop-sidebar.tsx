@@ -220,8 +220,8 @@ export function ShopSidebar({
         </div>
       </div>
 
-      <p className="px-3 pb-2 pt-5 text-sm font-bold uppercase tracking-wide text-muted-foreground">
-        Price
+      <p className="px-3 pb-1 pt-5 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+        Top rated
       </p>
       <div className="flex flex-col" aria-label="Top rated">
         {topRated.map((s) => {
