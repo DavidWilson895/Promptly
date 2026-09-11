@@ -53,7 +53,7 @@ export function FeedCard({
       className="flex cursor-pointer flex-col rounded-xl border border-transparent bg-neutral-100 p-4 outline-none transition-all duration-300 ease-[cubic-bezier(0.34,1.4,0.64,1)] hover:-translate-y-[2px] hover:border-neutral-100 hover:bg-[linear-gradient(180deg,#FFFFFF_39%,#A3FFBF_100%)] hover:shadow-[0px_0.6px_1px_-1.4px_rgba(0,0,0,0.36),0px_2.3px_4.1px_-2.8px_rgba(0,0,0,0.31),0px_10px_18px_-4.25px_rgba(0,0,0,0.07)] focus-visible:ring-2 focus-visible:ring-sky-500"
     >
       {/* Header */}
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center justify-between gap-2.5">
         <ServerMark
           server={server}
           className="size-8 bg-slate-100/80"
