@@ -30,7 +30,7 @@ export function CartPanel({
       {open ? (
         <div className="w-80 overflow-hidden rounded-2xl border bg-card shadow-xl">
           <div className="flex items-center justify-between border-b px-4 py-3">
-            <h3 className="inline-flex items-center gap-1.5 text-sm font-semibold">
+            <h3 className="inline-flex items-center gap-1.5 text-base font-semibold">
               <ShoppingCart className="size-4" aria-hidden="true" />
               Your stack
             </h3>
@@ -63,7 +63,7 @@ export function CartPanel({
               )}
               {copiedAll ? "Copied!" : "Copy all installs"}
             </Button>
-            <span className="text-xs tabular-nums text-muted-foreground">
+            <span className="text-sm tabular-nums text-muted-foreground">
               {items.length}
             </span>
           </div>
@@ -72,12 +72,12 @@ export function CartPanel({
       <button
         type="button"
         onClick={() => onOpenChange(!open)}
-        className="relative flex items-center gap-2 rounded-full bg-foreground px-4 py-3 text-sm font-medium text-background shadow-lg transition-transform hover:scale-105"
+        className="relative flex items-center gap-2 rounded-full bg-foreground px-4 py-3 text-base font-medium text-background shadow-lg transition-transform hover:scale-105"
         aria-label="Open your stack"
       >
         <ShoppingCart className="size-4" aria-hidden="true" />
         Stack
-        <span className="flex size-5 items-center justify-center rounded-full bg-background text-xs font-bold text-foreground">
+        <span className="flex size-6 items-center justify-center rounded-full bg-background text-sm font-bold text-foreground">
           {items.length}
         </span>
       </button>
@@ -98,8 +98,8 @@ function CartItem({
         {server.icon}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-medium">{server.name}</p>
-        <code className="flex items-center gap-1 truncate font-mono text-[10px] text-muted-foreground">
+        <p className="truncate text-sm font-medium">{server.name}</p>
+        <code className="flex items-center gap-1 truncate font-mono text-xs text-muted-foreground">
           <Terminal className="size-3 shrink-0" aria-hidden="true" />
           {server.install}
         </code>

@@ -106,7 +106,7 @@ export default function McpServerPage() {
       <main className="w-full px-4 pb-28 md:px-6 lg:px-8">
         {/* Slim storefront header */}
         <header className="relative mx-auto flex w-full max-w-[1600px] flex-col gap-4 pt-20 md:pt-24">
-          <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
+          <div className="flex flex-wrap items-center gap-2 text-sm font-medium">
             <span className="inline-flex items-center gap-1 rounded-full bg-foreground px-3 py-1 text-background">
               <Sparkles className="size-3.5" aria-hidden="true" />
               MCP Server Marketplace
@@ -121,13 +121,13 @@ export default function McpServerPage() {
             </span>
           </div>
           <div>
-            <h1 className="font-sans text-3xl font-semibold tracking-tight md:text-4xl">
+            <h1 className="font-sans text-4xl font-semibold tracking-tight md:text-5xl">
               Shop the servers.{" "}
               <span className="font-sans italic font-semibold">
                 Upvote the good ones.
               </span>
             </h1>
-            <p className="mt-2 max-w-2xl text-pretty text-[15px] leading-relaxed text-muted-foreground">
+            <p className="mt-2 max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground">
               A storefront of community-voted MCP servers. Browse the aisles,
               upvote your favourites, and add what you need to your stack.
             </p>
@@ -141,7 +141,7 @@ export default function McpServerPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search the store: servers, tools, tags…"
-              className="h-11 w-full rounded-full border border-border/60 bg-white pl-11 pr-10 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:ring-3 outline-none"
+              className="h-12 w-full rounded-full border border-border/60 bg-white pl-11 pr-10 text-base shadow-sm placeholder:text-muted-foreground focus-visible:ring-3 outline-none"
               aria-label="Search MCP servers"
             />
             {query ? (
@@ -191,7 +191,7 @@ export default function McpServerPage() {
                       type="button"
                       onClick={() => setSort(key)}
                       className={cn(
-                        "rounded-full px-2.5 py-1 text-[15px] transition-colors",
+                        "rounded-full px-2.5 py-1 text-lg transition-colors",
                         sort === key
                           ? "font-semibold text-foreground"
                           : "text-muted-foreground hover:text-foreground"
@@ -202,7 +202,7 @@ export default function McpServerPage() {
                     </button>
                   ))}
                 </div>
-                <span className="text-xs tabular-nums text-muted-foreground">
+                <span className="text-sm tabular-nums text-muted-foreground">
                   {filtered.length} results
                 </span>
               </div>
@@ -231,8 +231,8 @@ export default function McpServerPage() {
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3 pt-16 text-center">
-                <p className="text-base font-medium">Nothing in stock</p>
-                <p className="max-w-sm text-sm text-pretty text-muted-foreground">
+                <p className="text-lg font-medium">Nothing in stock</p>
+                <p className="max-w-sm text-base text-pretty text-muted-foreground">
                   Try a different search, category, or filter.
                 </p>
                 <button
@@ -243,7 +243,7 @@ export default function McpServerPage() {
                     setVerifiedOnly(false);
                     setPriceFilter("All");
                   }}
-                  className="mt-1 rounded-full bg-foreground px-4 py-1.5 text-sm font-medium text-background hover:opacity-90"
+                  className="mt-1 rounded-full bg-foreground px-4 py-2 text-base font-medium text-background hover:opacity-90"
                 >
                   Clear all filters
                 </button>
@@ -253,27 +253,27 @@ export default function McpServerPage() {
             {/* Top of the feed strip */}
             {filtered.length > 0 ? (
               <div className="mt-4 rounded-2xl border border-border/60 bg-card p-4">
-                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  <Trophy className="size-3.5" aria-hidden="true" />
+                <p className="flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  <Trophy className="size-4" aria-hidden="true" />
                   Top of the feed this week
                 </p>
                 <ul className="mt-3 flex flex-col divide-y divide-border/40">
                   {topOfFeed.map((s) => (
-                    <li key={s.id} className="flex items-center gap-2 py-2 text-sm">
-                      <span className="text-base" aria-hidden="true">
+                    <li key={s.id} className="flex items-center gap-2 py-2.5 text-base">
+                      <span className="text-xl" aria-hidden="true">
                         {s.icon}
                       </span>
                       <span className="min-w-0 flex-1 truncate font-medium">
                         {s.name}
                       </span>
-                      <span className="text-xs tabular-nums text-muted-foreground">
+                      <span className="text-sm tabular-nums text-muted-foreground">
                         {metricsOf(s).upvotes.toLocaleString()} ▲
                       </span>
                       <button
                         type="button"
                         onClick={() => toggle(setStack, s.id)}
                         className={cn(
-                          "rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors",
+                          "rounded-full border px-2.5 py-0.5 text-sm font-medium transition-colors",
                           stack.has(s.id)
                             ? "border-foreground bg-foreground text-background"
                             : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"

@@ -79,7 +79,7 @@ export function FeedPost({
         </button>
         <span
           className={cn(
-            "min-w-[2.5rem] text-center text-sm font-bold tabular-nums",
+            "min-w-[2.75rem] text-center text-base font-bold tabular-nums",
             upvoted ? "text-orange-600" : "text-muted-foreground"
           )}
         >
@@ -92,7 +92,7 @@ export function FeedPost({
         >
           <ArrowDown className="size-5" />
         </button>
-        <span className="mt-1 hidden text-[10px] font-semibold tabular-nums text-muted-foreground/70 sm:block">
+        <span className="mt-1 hidden text-xs font-semibold tabular-nums text-muted-foreground/70 sm:block">
           #{sortedIndex + 1}
         </span>
       </div>
@@ -103,7 +103,7 @@ export function FeedPost({
         <div className="flex items-center gap-2.5">
           <span
             className={cn(
-              "flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-sm font-bold text-white",
+              "flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-base font-bold text-white",
               av.gradient
             )}
             aria-hidden="true"
@@ -111,7 +111,7 @@ export function FeedPost({
             {av.letter}
           </span>
           <div className="flex min-w-0 items-center gap-1.5">
-            <span className="truncate text-[15px] font-bold leading-tight">
+            <span className="truncate text-lg font-bold leading-tight">
               {server.name}
             </span>
             {server.verified ? (
@@ -121,10 +121,10 @@ export function FeedPost({
               />
             ) : null}
           </div>
-          <span className="hidden truncate text-sm text-muted-foreground sm:inline">
+          <span className="hidden truncate text-base text-muted-foreground sm:inline">
             @{server.org.toLowerCase().replace(/[^a-z0-9]/g, "")} · {m.community}
           </span>
-          <span className="ml-auto shrink-0 text-sm text-muted-foreground">
+          <span className="ml-auto shrink-0 text-base text-muted-foreground">
             {m.postedDays === 0 ? "now" : `${m.postedDays}d`}
           </span>
         </div>
@@ -133,13 +133,13 @@ export function FeedPost({
         <div className="flex flex-wrap items-center gap-2">
           <span
             className={cn(
-              "rounded-full border px-2 py-0.5 text-[11px] font-semibold",
+              "rounded-full border px-2.5 py-0.5 text-sm font-semibold",
               PRICE_STYLES[m.priceTier]
             )}
           >
             {m.priceTier}
           </span>
-          <span className="flex items-center gap-1 text-sm tabular-nums">
+          <span className="flex items-center gap-1.5 text-base tabular-nums">
             <Star className="size-4 fill-amber-400 text-amber-400" aria-hidden="true" />
             <span className="font-semibold">{m.rating.toFixed(1)}</span>
             <span className="text-muted-foreground">
@@ -149,7 +149,7 @@ export function FeedPost({
         </div>
 
         {/* Description */}
-        <p className="text-[15px] leading-relaxed text-foreground">
+        <p className="text-lg leading-relaxed text-foreground">
           {server.description}
         </p>
 
@@ -157,7 +157,7 @@ export function FeedPost({
         <div className="flex flex-wrap items-center gap-1.5">
           <Badge
             variant="outline"
-            className="rounded-full border-border/60 text-xs font-normal"
+            className="rounded-full border-border/60 text-sm font-medium"
           >
             {server.category}
           </Badge>
@@ -165,13 +165,13 @@ export function FeedPost({
             <Badge
               key={t}
               variant="secondary"
-              className="rounded-full text-xs font-normal"
+              className="rounded-full text-sm font-medium"
             >
               {t}
             </Badge>
           ))}
           <span className="hidden min-w-0 flex-1 sm:block" />
-          <code className="hidden max-w-[16rem] truncate font-mono text-[11px] text-muted-foreground lg:inline">
+          <code className="hidden max-w-[20rem] truncate font-mono text-xs text-muted-foreground lg:inline">
             {server.install}
           </code>
         </div>
@@ -181,13 +181,13 @@ export function FeedPost({
           {server.tools.slice(0, 4).map((tool) => (
             <span
               key={tool}
-              className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground"
+              className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-sm text-muted-foreground"
             >
               {tool}
             </span>
           ))}
           {server.tools.length > 4 ? (
-            <span className="px-1 py-0.5 text-[11px] text-muted-foreground">
+            <span className="px-1 py-0.5 text-sm text-muted-foreground">
               +{server.tools.length - 4} more
             </span>
           ) : null}
@@ -195,13 +195,13 @@ export function FeedPost({
 
         {/* Twitter action bar */}
         <div className="mt-1 flex items-center gap-1 border-t border-border/40 pt-2.5">
-          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-emerald-600">
+          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-base text-muted-foreground transition-colors hover:bg-muted hover:text-emerald-600">
             <MessageCircle className="size-4" aria-hidden="true" />
             <span className="tabular-nums">{m.comments.toLocaleString()}</span>
           </span>
           <button
             type="button"
-            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-emerald-600"
+            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-base text-muted-foreground transition-colors hover:bg-muted hover:text-emerald-600"
           >
             <Repeat2 className="size-4" aria-hidden="true" />
             <span className="tabular-nums">
@@ -214,7 +214,7 @@ export function FeedPost({
             aria-label="Like"
             aria-pressed={loved}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm transition-colors",
+              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-base transition-colors",
               loved
                 ? "text-rose-500"
                 : "text-muted-foreground hover:bg-rose-50 hover:text-rose-500"
@@ -234,7 +234,7 @@ export function FeedPost({
             aria-label="Bookmark"
             aria-pressed={bookmarked}
             className={cn(
-              "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-sm transition-colors",
+              "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-base transition-colors",
               bookmarked
                 ? "text-sky-600"
                 : "text-muted-foreground hover:bg-sky-50 hover:text-sky-600"
@@ -249,7 +249,7 @@ export function FeedPost({
             type="button"
             onClick={onCopy}
             aria-label="Copy install"
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-base text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             {copied ? (
               <Check className="size-4 text-emerald-500" />
@@ -266,7 +266,7 @@ export function FeedPost({
               className="gap-1.5 rounded-full"
               onClick={onStack}
             >
-              <ShoppingCart className="size-3.5" aria-hidden="true" />
+              <ShoppingCart className="size-4" aria-hidden="true" />
               {inStack ? "In stack" : "Add to stack"}
             </Button>
           </span>

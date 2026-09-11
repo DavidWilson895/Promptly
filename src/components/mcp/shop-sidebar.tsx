@@ -57,8 +57,8 @@ export function ShopSidebar({
     <div className="flex flex-col gap-5">
       {/* Storefront menu */}
       <div>
-        <p className="flex items-center gap-1.5 px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          <Tag className="size-3.5" aria-hidden="true" />
+        <p className="flex items-center gap-1.5 px-1 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          <Tag className="size-4" aria-hidden="true" />
           Browse
         </p>
         <nav className="mt-2 flex flex-col gap-0.5" aria-label="Categories">
@@ -66,7 +66,7 @@ export function ShopSidebar({
             type="button"
             onClick={() => onCategory("All")}
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors",
+              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-base font-medium transition-colors",
               category === "All"
                 ? "bg-foreground text-background"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -81,7 +81,7 @@ export function ShopSidebar({
             All servers
             <span
               className={cn(
-                "ml-auto text-xs tabular-nums",
+                "ml-auto text-sm tabular-nums",
                 category === "All" ? "text-background/70" : "text-muted-foreground/70"
               )}
             >
@@ -98,7 +98,7 @@ export function ShopSidebar({
                 type="button"
                 onClick={() => onCategory(c)}
                 className={cn(
-                  "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors",
+                  "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-base font-medium transition-colors",
                   active
                     ? "bg-foreground text-background"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -113,7 +113,7 @@ export function ShopSidebar({
                 {c}
                 <span
                   className={cn(
-                    "ml-auto text-xs tabular-nums",
+                    "ml-auto text-sm tabular-nums",
                     active ? "text-background/70" : "text-muted-foreground/70"
                   )}
                 >
@@ -127,8 +127,8 @@ export function ShopSidebar({
 
       {/* Filters */}
       <div className="flex flex-col gap-3 border-t border-border/40 pt-4">
-        <p className="flex items-center gap-1.5 px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          <Activity className="size-3.5" aria-hidden="true" />
+        <p className="flex items-center gap-1.5 px-1 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          <Activity className="size-4" aria-hidden="true" />
           Filters
         </p>
         <button
@@ -136,7 +136,7 @@ export function ShopSidebar({
           onClick={() => onVerifiedOnly(!verifiedOnly)}
           aria-pressed={verifiedOnly}
           className={cn(
-            "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
+            "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-base transition-colors",
             verifiedOnly
               ? "bg-emerald-50 text-emerald-700"
               : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -146,7 +146,7 @@ export function ShopSidebar({
           Verified only
           <span
             className={cn(
-              "ml-auto text-xs tabular-nums",
+              "ml-auto text-sm tabular-nums",
               verifiedOnly ? "text-emerald-600/70" : "text-muted-foreground/70"
             )}
           >
@@ -160,7 +160,7 @@ export function ShopSidebar({
               type="button"
               onClick={() => onPriceFilter(p)}
               className={cn(
-                "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
+                "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
                 priceFilter === p
                   ? "border-foreground bg-foreground text-background"
                   : "border-border bg-card text-muted-foreground hover:border-foreground/40 hover:text-foreground"
@@ -174,21 +174,21 @@ export function ShopSidebar({
 
       {/* Featured promo */}
       <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-100 p-4">
-        <p className="text-xs font-bold uppercase tracking-wide text-orange-700">
+        <p className="text-sm font-bold uppercase tracking-wide text-orange-700">
           Featured
         </p>
-        <p className="mt-1 text-sm font-semibold text-orange-950">
+        <p className="mt-1 text-lg font-semibold text-orange-950">
           GitHub · the most installed server
         </p>
-        <p className="mt-1 text-xs leading-relaxed text-orange-800/80">
+        <p className="mt-1 text-sm leading-relaxed text-orange-800/80">
           Repos, issues, PRs and code search — 39.5k stars and rising.
         </p>
       </div>
 
       {/* Your stack */}
       <div className="rounded-2xl border border-border/60 bg-card p-4">
-        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          <ShoppingCart className="size-3.5" aria-hidden="true" />
+        <p className="flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          <ShoppingCart className="size-4" aria-hidden="true" />
           Your stack
         </p>
         {stack.size > 0 ? (
@@ -197,7 +197,7 @@ export function ShopSidebar({
               {Array.from(stack).map((id) => {
                 const s = MCP_SERVERS.find((x) => x.id === id) as McpServer;
                 return (
-                  <li key={id} className="flex items-center gap-2 text-sm">
+                  <li key={id} className="flex items-center gap-2 text-base">
                     <span className="text-base" aria-hidden="true">
                       {s.icon}
                     </span>
@@ -209,13 +209,13 @@ export function ShopSidebar({
             <button
               type="button"
               onClick={onOpenCart}
-              className="mt-3 w-full rounded-full bg-foreground px-3 py-1.5 text-sm font-medium text-background hover:opacity-90"
+              className="mt-3 w-full rounded-full bg-foreground px-3 py-2 text-base font-medium text-background hover:opacity-90"
             >
               View cart ({stack.size})
             </button>
           </>
         ) : (
-          <p className="mt-3 text-sm text-muted-foreground">
+          <p className="mt-3 text-base text-muted-foreground">
             Your stack is empty. Add servers while you shop.
           </p>
         )}
