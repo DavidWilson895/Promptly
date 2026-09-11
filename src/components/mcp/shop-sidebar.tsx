@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   Activity,
   BadgeCheck,
@@ -9,13 +8,9 @@ import {
   Database,
   FlaskConical,
   Globe,
-  Hash,
-  House,
-  Library,
   MessagesSquare,
   Palette,
   Rocket,
-  Server,
   ShoppingCart,
   type LucideIcon,
 } from "lucide-react";
@@ -40,21 +35,22 @@ function NavRow({
   icon: Icon,
   label,
   active,
-  href,
   onClick,
   badge,
 }: {
   icon: LucideIcon;
   label: string;
   active?: boolean;
-  href?: string;
   onClick?: () => void;
   badge?: number;
 }) {
-  const cls =
-    "flex w-fit items-center gap-4 rounded-full p-3 text-xl transition-colors hover:bg-muted";
-  const content = (
-    <>
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className="flex w-fit items-center gap-4 rounded-full p-3 text-xl transition-colors hover:bg-muted"
+    >
       <Icon className="size-7 shrink-0" aria-hidden="true" />
       <span className={cn("truncate", active ? "font-extrabold" : undefined)}>
         {label}
@@ -64,20 +60,6 @@ function NavRow({
           {badge}
         </span>
       ) : null}
-    </>
-  );
-  return href ? (
-    <Link href={href} className={cls} aria-current={active ? "page" : undefined}>
-      {content}
-    </Link>
-  ) : (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={cls}
-    >
-      {content}
     </button>
   );
 }
@@ -112,20 +94,7 @@ export function ShopSidebar({
 
   return (
     <div className="flex flex-col gap-1 py-2">
-      <Link
-        href="/mcp-server"
-        className="mb-1 flex w-fit items-center gap-3 rounded-full p-3 transition-colors hover:bg-muted"
-        aria-label="MCP Servers home"
-      >
-        <Server className="size-7" aria-hidden="true" />
-        <span className="text-xl font-extrabold">Servers</span>
-      </Link>
-
       <nav className="flex flex-col" aria-label="Marketplace">
-        <NavRow icon={House} label="Home" href="/" />
-        <NavRow icon={Hash} label="Explore" href="/" />
-        <NavRow icon={Server} label="MCP Servers" href="/mcp-server" active />
-        <NavRow icon={Library} label="My Library" href="/my-library" />
         <NavRow
           icon={Bookmark}
           label="Saved"
