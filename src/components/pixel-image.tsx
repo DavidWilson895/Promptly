@@ -6,6 +6,51 @@ import { cn } from "@/lib/utils";
 
 type Fit = "cover" | "contain";
 
+const SEEN_KEY = "promptly:seen-images";
+
+let seenCache: Set<string> | null = null;
+
+function getSeen(): Set<string> {
+  if (seenCache) return seenCache;
+  seenCache = new Set<string>();
+  try {
+    if (typeof window !== "undefined") {
+      const raw = window.sessionStorage.getItem(SEEN_KEY);
+      if (raw) {
+        const arr: unknown = JSON.parse(raw);
+        if (Array.isArray(arr)) {
+          for (const v of arr) if (typeof v === "string") seenCache.add(v);
+        }
+      }
+    }
+  } catch {
+    /* storage unavailable */
+  }
+  return seenCache;
+}
+
+function hasSeen(src: string): boolean {
+  try {
+    return getSeen().has(src);
+  } catch {
+    return false;
+  }
+}
+
+function markSeen(src: string): void {
+  try {
+    const seen = getSeen();
+    if (seen.has(src)) return;
+    seen.add(src);
+    window.sessionStorage.setItem(
+      SEEN_KEY,
+      JSON.stringify([...seen].slice(-300))
+    );
+  } catch {
+    /* storage unavailable */
+  }
+}
+
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
@@ -129,6 +174,9 @@ export function PixelImage({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const rafRef = useRef<number | null>(null);
+  const assignTimeRef = useRef(0);
+  const srcRef = useRef(src);
+  srcRef.current = src;
   const optsRef = useRef({ duration, delay, pixelSize, fit });
   optsRef.current = { duration, delay, pixelSize, fit };
   const [frameSize, setFrameSize] = useState({ width: 0, height: 0 });
@@ -160,12 +208,18 @@ export function PixelImage({
 
   useEffect(() => {
     if (!inView) return;
-    const wait = index === undefined ? 0 : Math.min(index * 60, 900);
+    // Images already seen this session load instantly — no stagger, no replay.
+    const wait =
+      index === undefined || hasSeen(src) ? 0 : Math.min(index * 60, 900);
     if (wait === 0) {
+      assignTimeRef.current = performance.now();
       setLoadSrc(src);
       return;
     }
-    const t = setTimeout(() => setLoadSrc(src), wait);
+    const t = setTimeout(() => {
+      assignTimeRef.current = performance.now();
+      setLoadSrc(src);
+    }, wait);
     return () => clearTimeout(t);
   }, [inView, src, index]);
 
@@ -204,6 +258,17 @@ export function PixelImage({
     if (!canvas || !img || !img.naturalWidth) return;
     if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
 
+    // Already seen this session, or served instantly from cache (e.g. page
+    // refresh) — show sharp immediately instead of replaying the animation.
+    const srcKey = srcRef.current;
+    const loadedFast = performance.now() - assignTimeRef.current < 200;
+    if (srcKey && (hasSeen(srcKey) || loadedFast)) {
+      markSeen(srcKey);
+      img.style.opacity = "1";
+      img.style.filter = "blur(0px)";
+      return;
+    }
+
     const pixelRatio =
       typeof window === "undefined" ? 1 : window.devicePixelRatio || 1;
     const frameW = Math.max(1, canvas.clientWidth || 1);
@@ -220,6 +285,7 @@ export function PixelImage({
       drawPixelatedImage(canvas, img, 1, fit);
       img.style.opacity = "1";
       img.style.filter = "blur(0px)";
+      if (srcKey) markSeen(srcKey);
       return;
     }
 
@@ -252,6 +318,7 @@ export function PixelImage({
         rafRef.current = requestAnimationFrame(tick);
         return;
       }
+      markSeen(srcRef.current);
       img.style.opacity = "1";
       img.style.filter = "blur(0px)";
     };
