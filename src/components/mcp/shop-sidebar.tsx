@@ -11,7 +11,6 @@ import {
   MessagesSquare,
   Palette,
   Rocket,
-  ShoppingCart,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -74,8 +73,6 @@ export function ShopSidebar({
   savedOnly,
   onSavedOnly,
   savedCount,
-  stack,
-  onOpenCart,
 }: {
   category: string;
   onCategory: (c: string) => void;
@@ -86,8 +83,6 @@ export function ShopSidebar({
   savedOnly: boolean;
   onSavedOnly: (v: boolean) => void;
   savedCount: number;
-  stack: Set<string>;
-  onOpenCart: () => void;
 }) {
   const prices = ["All", "Free", "Freemium", "Paid"] as const;
   const verifiedCount = MCP_SERVERS.filter((s) => s.verified).length;
@@ -184,15 +179,6 @@ export function ShopSidebar({
           </button>
         ))}
       </div>
-
-      <button
-        type="button"
-        onClick={onOpenCart}
-        className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-3.5 text-lg font-bold text-background transition-opacity hover:opacity-90"
-      >
-        <ShoppingCart className="size-5" aria-hidden="true" />
-        Your Stack{stack.size > 0 ? ` (${stack.size})` : ""}
-      </button>
     </div>
   );
 }

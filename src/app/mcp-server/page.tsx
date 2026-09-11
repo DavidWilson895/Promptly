@@ -138,8 +138,6 @@ export default function McpServerPage() {
             savedOnly={savedOnly}
             onSavedOnly={setSavedOnly}
             savedCount={bookmarked.size}
-            stack={stack}
-            onOpenCart={() => setCartOpen(true)}
           />
         </aside>
 
