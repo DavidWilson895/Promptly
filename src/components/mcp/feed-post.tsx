@@ -1,24 +1,23 @@
 "use client";
 
 import {
-  ArrowDown,
-  ArrowUp,
+  ArrowBigUp,
   BadgeCheck,
   Bookmark,
   Check,
   Copy,
   Heart,
   MessageCircle,
-  Repeat2,
-  ShoppingCart,
+  Share,
   Star,
-  Terminal,
+  type LucideIcon,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   avatarOf,
+  formatCompact,
   metricsOf,
+  timeAgo,
   type McpServer,
 } from "@/lib/mcp-servers";
 import { cn } from "@/lib/utils";
@@ -29,9 +28,46 @@ const PRICE_STYLES: Record<string, string> = {
   Paid: "border-sky-200 bg-sky-50 text-sky-700",
 };
 
+function FeedAction({
+  label,
+  count,
+  onClick,
+  pressed,
+  icon: Icon,
+  iconClass,
+  textClass,
+  bgClass,
+}: {
+  label: string;
+  count?: string;
+  onClick?: () => void;
+  pressed?: boolean;
+  icon: LucideIcon;
+  iconClass?: string;
+  textClass: string;
+  bgClass: string;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-pressed={pressed}
+      onClick={onClick}
+      className={cn(
+        "flex items-center text-base tabular-nums text-muted-foreground transition-colors",
+        textClass
+      )}
+    >
+      <span className={cn("rounded-full p-2 transition-colors", bgClass)}>
+        <Icon className={cn("size-5", iconClass)} aria-hidden="true" />
+      </span>
+      {count ? <span className="-ml-1 pr-2">{count}</span> : null}
+    </button>
+  );
+}
+
 export function FeedPost({
   server,
-  sortedIndex,
   upvoted,
   loved,
   bookmarked,
@@ -44,7 +80,6 @@ export function FeedPost({
   onCopy,
 }: {
   server: McpServer;
-  sortedIndex: number;
   upvoted: boolean;
   loved: boolean;
   bookmarked: boolean;
@@ -58,220 +93,188 @@ export function FeedPost({
 }) {
   const m = metricsOf(server);
   const av = avatarOf(server);
+  const handle = `@${server.org.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
 
   return (
-    <div className="flex gap-3 px-4 py-5 sm:gap-4 sm:px-6">
-      {/* Reddit upvote rail */}
-      <div className="flex shrink-0 flex-col items-center gap-1">
-        <button
-          type="button"
-          onClick={onUpvote}
-          aria-label="Upvote"
-          aria-pressed={upvoted}
-          className={cn(
-            "flex size-8 items-center justify-center rounded-full transition-colors",
-            upvoted
-              ? "bg-orange-100 text-orange-600"
-              : "text-muted-foreground hover:bg-orange-50 hover:text-orange-600"
-          )}
-        >
-          <ArrowUp className="size-5" />
-        </button>
+    <article className="border-b border-border px-4 py-4 transition-colors hover:bg-muted/40">
+      <div className="flex gap-3">
         <span
           className={cn(
-            "min-w-[2.75rem] text-center text-base font-bold tabular-nums",
-            upvoted ? "text-orange-600" : "text-muted-foreground"
+            "flex size-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-lg font-bold text-white",
+            av.gradient
           )}
+          aria-hidden="true"
         >
-          {(m.upvotes + (upvoted ? 1 : 0)).toLocaleString()}
+          {av.letter}
         </span>
-        <button
-          type="button"
-          aria-label="Downvote"
-          className="flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-blue-50 hover:text-blue-600"
-        >
-          <ArrowDown className="size-5" />
-        </button>
-        <span className="mt-1 hidden text-xs font-semibold tabular-nums text-muted-foreground/70 sm:block">
-          #{sortedIndex + 1}
-        </span>
-      </div>
 
-      {/* Content */}
-      <div className="flex min-w-0 flex-1 flex-col gap-2.5">
-        {/* Twitter-style header */}
-        <div className="flex items-center gap-2.5">
-          <span
-            className={cn(
-              "flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-base font-bold text-white",
-              av.gradient
-            )}
-            aria-hidden="true"
-          >
-            {av.letter}
-          </span>
-          <div className="flex min-w-0 items-center gap-1.5">
+        <div className="min-w-0 flex-1">
+          {/* Header */}
+          <div className="flex items-center gap-1.5">
             <span className="truncate text-lg font-bold leading-tight">
               {server.name}
             </span>
             {server.verified ? (
               <BadgeCheck
-                className="size-4 shrink-0 fill-sky-500 text-white"
+                className="size-5 shrink-0 fill-sky-500 text-white"
                 aria-label="Verified"
               />
             ) : null}
-          </div>
-          <span className="hidden truncate text-base text-muted-foreground sm:inline">
-            @{server.org.toLowerCase().replace(/[^a-z0-9]/g, "")} · {m.community}
-          </span>
-          <span className="ml-auto shrink-0 text-base text-muted-foreground">
-            {m.postedDays === 0 ? "now" : `${m.postedDays}d`}
-          </span>
-        </div>
-
-        {/* Price + rating (shopping) */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span
-            className={cn(
-              "rounded-full border px-2.5 py-0.5 text-sm font-semibold",
-              PRICE_STYLES[m.priceTier]
-            )}
-          >
-            {m.priceTier}
-          </span>
-          <span className="flex items-center gap-1.5 text-base tabular-nums">
-            <Star className="size-4 fill-amber-400 text-amber-400" aria-hidden="true" />
-            <span className="font-semibold">{m.rating.toFixed(1)}</span>
-            <span className="text-muted-foreground">
-              ({m.reviews.toLocaleString()})
+            <span className="truncate text-base text-muted-foreground">
+              {handle} · {timeAgo(server)}
             </span>
-          </span>
-        </div>
-
-        {/* Description */}
-        <p className="text-lg leading-relaxed text-foreground">
-          {server.description}
-        </p>
-
-        {/* Tags + tools */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Badge
-            variant="outline"
-            className="rounded-full border-border/60 text-sm font-medium"
-          >
-            {server.category}
-          </Badge>
-          {server.tags.slice(0, 3).map((t) => (
-            <Badge
-              key={t}
-              variant="secondary"
-              className="rounded-full text-sm font-medium"
-            >
-              {t}
-            </Badge>
-          ))}
-          <span className="hidden min-w-0 flex-1 sm:block" />
-          <code className="hidden max-w-[20rem] truncate font-mono text-xs text-muted-foreground lg:inline">
-            {server.install}
-          </code>
-        </div>
-
-        {/* Tools */}
-        <div className="mt-1 flex flex-wrap gap-1">
-          {server.tools.slice(0, 4).map((tool) => (
             <span
-              key={tool}
-              className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-sm text-muted-foreground"
+              className={cn(
+                "ml-auto shrink-0 rounded-full border px-2.5 py-0.5 text-sm font-semibold",
+                PRICE_STYLES[m.priceTier]
+              )}
             >
-              {tool}
+              {m.priceTier}
             </span>
-          ))}
-          {server.tools.length > 4 ? (
-            <span className="px-1 py-0.5 text-sm text-muted-foreground">
-              +{server.tools.length - 4} more
-            </span>
-          ) : null}
-        </div>
+          </div>
 
-        {/* Twitter action bar */}
-        <div className="mt-1 flex items-center gap-1 border-t border-border/40 pt-2.5">
-          <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-base text-muted-foreground transition-colors hover:bg-muted hover:text-emerald-600">
-            <MessageCircle className="size-4" aria-hidden="true" />
-            <span className="tabular-nums">{m.comments.toLocaleString()}</span>
-          </span>
-          <button
-            type="button"
-            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-base text-muted-foreground transition-colors hover:bg-muted hover:text-emerald-600"
-          >
-            <Repeat2 className="size-4" aria-hidden="true" />
-            <span className="tabular-nums">
-              {Math.floor(m.upvotes / 3).toLocaleString()}
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={onLove}
-            aria-label="Like"
-            aria-pressed={loved}
-            className={cn(
-              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-base transition-colors",
-              loved
-                ? "text-rose-500"
-                : "text-muted-foreground hover:bg-rose-50 hover:text-rose-500"
-            )}
-          >
-            <Heart
-              className={cn("size-4", loved && "fill-rose-500")}
-              aria-hidden="true"
-            />
-            <span className="tabular-nums">
-              {Math.floor(m.upvotes / 2).toLocaleString()}
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={onBookmark}
-            aria-label="Bookmark"
-            aria-pressed={bookmarked}
-            className={cn(
-              "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-base transition-colors",
-              bookmarked
-                ? "text-sky-600"
-                : "text-muted-foreground hover:bg-sky-50 hover:text-sky-600"
-            )}
-          >
-            <Bookmark
-              className={cn("size-4", bookmarked && "fill-sky-600")}
-              aria-hidden="true"
-            />
-          </button>
-          <button
-            type="button"
-            onClick={onCopy}
-            aria-label="Copy install"
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-base text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          >
-            {copied ? (
-              <Check className="size-4 text-emerald-500" />
-            ) : (
-              <Copy className="size-4" />
-            )}
-            {copied ? "Copied" : "Copy"}
-          </button>
+          {/* Body with inline hashtag tags */}
+          <p className="mt-0.5 text-lg leading-snug text-foreground">
+            {server.description}
+          </p>
 
-          <span className="ml-auto">
-            <Button
-              variant={inStack ? "secondary" : "default"}
-              size="sm"
-              className="gap-1.5 rounded-full"
-              onClick={onStack}
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <Badge
+              variant="outline"
+              className="rounded-full border-border/60 text-sm font-medium"
             >
-              <ShoppingCart className="size-4" aria-hidden="true" />
-              {inStack ? "In stack" : "Add to stack"}
-            </Button>
-          </span>
+              {server.category}
+            </Badge>
+            {server.tags.slice(0, 3).map((t) => (
+              <Badge
+                key={t}
+                variant="secondary"
+                className="rounded-full text-sm font-medium"
+              >
+                {t}
+              </Badge>
+            ))}
+          </div>
+
+          {/* Shop attachment card */}
+          <div className="mt-3 overflow-hidden rounded-2xl border border-border">
+            <div className="flex items-center gap-3 px-4 py-3">
+              <span className="text-2xl" aria-hidden="true">
+                {server.icon}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-base font-bold">{server.name}</p>
+                <p className="mt-0.5 flex items-center gap-1 text-sm tabular-nums text-muted-foreground">
+                  <Star
+                    className="size-4 fill-amber-400 text-amber-400"
+                    aria-hidden="true"
+                  />
+                  <span className="font-semibold text-foreground">
+                    {m.rating.toFixed(1)}
+                  </span>
+                  ({formatCompact(m.reviews)} reviews)
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={onStack}
+                aria-pressed={inStack}
+                className={cn(
+                  "shrink-0 rounded-full px-4 py-1.5 text-sm font-bold transition-colors",
+                  inStack
+                    ? "border border-border text-foreground hover:border-foreground/40"
+                    : "bg-foreground text-background hover:opacity-90"
+                )}
+              >
+                {inStack ? "Added" : "Add"}
+              </button>
+            </div>
+            <div className="flex items-center gap-2 border-t border-border bg-muted/60 px-4 py-2.5">
+              <code className="min-w-0 flex-1 truncate font-mono text-sm text-muted-foreground">
+                {server.install}
+              </code>
+              <button
+                type="button"
+                onClick={onCopy}
+                aria-label="Copy install command"
+                className="shrink-0 rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                {copied ? (
+                  <Check className="size-4 text-emerald-600" />
+                ) : (
+                  <Copy className="size-4" />
+                )}
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-1.5 px-4 pb-3">
+              {server.tools.slice(0, 5).map((tool) => (
+                <span
+                  key={tool}
+                  className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-sm text-muted-foreground"
+                >
+                  {tool}
+                </span>
+              ))}
+              {server.tools.length > 5 ? (
+                <span className="px-1 py-0.5 text-sm text-muted-foreground">
+                  +{server.tools.length - 5}
+                </span>
+              ) : null}
+            </div>
+          </div>
+
+          {/* X action bar */}
+          <div className="-ml-2 mt-1 flex items-center justify-between">
+            <FeedAction
+              label="Upvote"
+              count={formatCompact(m.upvotes + (upvoted ? 1 : 0))}
+              onClick={onUpvote}
+              pressed={upvoted}
+              icon={ArrowBigUp}
+              iconClass={upvoted ? "fill-orange-600" : undefined}
+              textClass={upvoted ? "text-orange-600" : "hover:text-orange-600"}
+              bgClass="hover:bg-orange-100"
+            />
+            <FeedAction
+              label="Replies"
+              count={formatCompact(m.comments)}
+              icon={MessageCircle}
+              textClass="hover:text-sky-600"
+              bgClass="hover:bg-sky-100"
+            />
+            <FeedAction
+              label="Like"
+              count={formatCompact(Math.floor(m.upvotes / 2))}
+              onClick={onLove}
+              pressed={loved}
+              icon={Heart}
+              iconClass={loved ? "fill-rose-500" : undefined}
+              textClass={loved ? "text-rose-500" : "hover:text-rose-500"}
+              bgClass="hover:bg-rose-100"
+            />
+            <span className="flex items-center">
+              <FeedAction
+                label="Bookmark"
+                onClick={onBookmark}
+                pressed={bookmarked}
+                icon={Bookmark}
+                iconClass={bookmarked ? "fill-sky-600" : undefined}
+                textClass={
+                  bookmarked ? "text-sky-600" : "hover:text-sky-600"
+                }
+                bgClass="hover:bg-sky-100"
+              />
+              <FeedAction
+                label={copied ? "Copied" : "Share install command"}
+                onClick={onCopy}
+                icon={copied ? Check : Share}
+                textClass="hover:text-sky-600"
+                bgClass="hover:bg-sky-100"
+              />
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

@@ -385,6 +385,7 @@ export type McpMetrics = {
   comments: number;
   rating: number;
   reviews: number;
+  views: number;
   postedDays: number;
   priceTier: "Free" | "Freemium" | "Paid";
   author: string;
@@ -424,16 +425,32 @@ const COMMUNITIES = [
 export function metricsOf(server: McpServer): McpMetrics {
   const h = hash(server.id);
   const tierRoll = h % 10;
+  const upvotes = 300 + (h % 12000);
+  const comments = 18 + (h % 480);
   return {
-    upvotes: 300 + (h % 12000),
-    comments: 18 + (h % 480),
+    upvotes,
+    comments,
     rating: 4 + ((h % 10) / 10),
     reviews: 80 + (h % 920),
+    views: upvotes * 41 + comments * 13,
     postedDays: h % 90,
     priceTier: tierRoll < 2 ? "Paid" : tierRoll < 7 ? "Freemium" : "Free",
     author: AUTHORS[h % AUTHORS.length],
     community: COMMUNITIES[h % COMMUNITIES.length],
   };
+}
+
+export function timeAgo(server: McpServer): string {
+  const d = metricsOf(server).postedDays;
+  if (d === 0) return `${(hash(server.id) % 20) + 1}h`;
+  if (d < 30) return `${d}d`;
+  return `${Math.floor(d / 30)}mo`;
+}
+
+export function formatCompact(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+  return `${n}`;
 }
 
 export type SortKey = "hot" | "new" | "top";

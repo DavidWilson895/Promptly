@@ -1,26 +1,31 @@
 "use client";
 
+import Link from "next/link";
 import {
-  FlaskConical,
-  Rocket,
-  Database,
   Activity,
-  Globe,
-  Palette,
-  BarChart3,
-  MessagesSquare,
   BadgeCheck,
+  BarChart3,
+  Bookmark,
+  Database,
+  FlaskConical,
+  Globe,
+  Hash,
+  House,
+  Library,
+  MessagesSquare,
+  Palette,
+  Rocket,
+  Server,
   ShoppingCart,
-  Tag,
+  type LucideIcon,
 } from "lucide-react";
 import {
   MCP_SERVERS,
   MCP_CATEGORIES,
-  type McpServer,
 } from "@/lib/mcp-servers";
 import { cn } from "@/lib/utils";
 
-const CATEGORY_ICONS: Record<string, typeof FlaskConical> = {
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
   "Developer Tools": FlaskConical,
   Productivity: Rocket,
   Database,
@@ -31,6 +36,52 @@ const CATEGORY_ICONS: Record<string, typeof FlaskConical> = {
   Communication: MessagesSquare,
 };
 
+function NavRow({
+  icon: Icon,
+  label,
+  active,
+  href,
+  onClick,
+  badge,
+}: {
+  icon: LucideIcon;
+  label: string;
+  active?: boolean;
+  href?: string;
+  onClick?: () => void;
+  badge?: number;
+}) {
+  const cls =
+    "flex w-fit items-center gap-4 rounded-full p-3 text-xl transition-colors hover:bg-muted";
+  const content = (
+    <>
+      <Icon className="size-7 shrink-0" aria-hidden="true" />
+      <span className={cn("truncate", active ? "font-extrabold" : undefined)}>
+        {label}
+      </span>
+      {badge !== undefined && badge > 0 ? (
+        <span className="rounded-full bg-sky-500 px-2 py-0.5 text-sm font-bold text-white">
+          {badge}
+        </span>
+      ) : null}
+    </>
+  );
+  return href ? (
+    <Link href={href} className={cls} aria-current={active ? "page" : undefined}>
+      {content}
+    </Link>
+  ) : (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={cls}
+    >
+      {content}
+    </button>
+  );
+}
+
 export function ShopSidebar({
   category,
   onCategory,
@@ -38,6 +89,9 @@ export function ShopSidebar({
   onVerifiedOnly,
   priceFilter,
   onPriceFilter,
+  savedOnly,
+  onSavedOnly,
+  savedCount,
   stack,
   onOpenCart,
 }: {
@@ -47,6 +101,9 @@ export function ShopSidebar({
   onVerifiedOnly: (v: boolean) => void;
   priceFilter: string;
   onPriceFilter: (p: string) => void;
+  savedOnly: boolean;
+  onSavedOnly: (v: boolean) => void;
+  savedCount: number;
   stack: Set<string>;
   onOpenCart: () => void;
 }) {
@@ -54,172 +111,119 @@ export function ShopSidebar({
   const verifiedCount = MCP_SERVERS.filter((s) => s.verified).length;
 
   return (
-    <div className="flex flex-col gap-5">
-      {/* Storefront menu */}
-      <div>
-        <p className="flex items-center gap-1.5 px-1 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          <Tag className="size-4" aria-hidden="true" />
-          Browse
-        </p>
-        <nav className="mt-2 flex flex-col gap-0.5" aria-label="Categories">
-          <button
-            type="button"
-            onClick={() => onCategory("All")}
-            className={cn(
-              "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-base font-medium transition-colors",
-              category === "All"
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <FlaskConical
-              className={cn(
-                "size-4",
-                category === "All" ? "text-background" : "text-foreground/70"
-              )}
-            />
-            All servers
-            <span
-              className={cn(
-                "ml-auto text-sm tabular-nums",
-                category === "All" ? "text-background/70" : "text-muted-foreground/70"
-              )}
-            >
-              {MCP_SERVERS.length}
-            </span>
-          </button>
-          {MCP_CATEGORIES.filter((c) => c !== "All").map((c) => {
-            const Icon = CATEGORY_ICONS[c] ?? FlaskConical;
-            const count = MCP_SERVERS.filter((s) => s.category === c).length;
-            const active = category === c;
-            return (
-              <button
-                key={c}
-                type="button"
-                onClick={() => onCategory(c)}
-                className={cn(
-                  "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-base font-medium transition-colors",
-                  active
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                )}
-              >
-                <Icon
-                  className={cn(
-                    "size-4",
-                    active ? "text-background" : "text-foreground/70"
-                  )}
-                />
-                {c}
-                <span
-                  className={cn(
-                    "ml-auto text-sm tabular-nums",
-                    active ? "text-background/70" : "text-muted-foreground/70"
-                  )}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </nav>
-      </div>
+    <div className="flex flex-col gap-1 py-2">
+      <Link
+        href="/mcp-server"
+        className="mb-1 flex w-fit items-center gap-3 rounded-full p-3 transition-colors hover:bg-muted"
+        aria-label="MCP Servers home"
+      >
+        <Server className="size-7" aria-hidden="true" />
+        <span className="text-xl font-extrabold">Servers</span>
+      </Link>
 
-      {/* Filters */}
-      <div className="flex flex-col gap-3 border-t border-border/40 pt-4">
-        <p className="flex items-center gap-1.5 px-1 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          <Activity className="size-4" aria-hidden="true" />
-          Filters
-        </p>
+      <nav className="flex flex-col" aria-label="Marketplace">
+        <NavRow icon={House} label="Home" href="/" />
+        <NavRow icon={Hash} label="Explore" href="/" />
+        <NavRow icon={Server} label="MCP Servers" href="/mcp-server" active />
+        <NavRow icon={Library} label="My Library" href="/my-library" />
+        <NavRow
+          icon={Bookmark}
+          label="Saved"
+          active={savedOnly}
+          onClick={() => onSavedOnly(!savedOnly)}
+          badge={savedCount}
+        />
+        <NavRow
+          icon={BadgeCheck}
+          label="Verified"
+          active={verifiedOnly}
+          onClick={() => onVerifiedOnly(!verifiedOnly)}
+          badge={verifiedCount}
+        />
+      </nav>
+
+      <p className="px-3 pb-1 pt-5 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+        Browse
+      </p>
+      <div className="flex flex-col" aria-label="Categories">
         <button
           type="button"
-          onClick={() => onVerifiedOnly(!verifiedOnly)}
-          aria-pressed={verifiedOnly}
-          className={cn(
-            "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-base transition-colors",
-            verifiedOnly
-              ? "bg-emerald-50 text-emerald-700"
-              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          )}
+          onClick={() => onCategory("All")}
+          className="flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-lg transition-colors hover:bg-muted"
+          aria-pressed={category === "All"}
         >
-          <BadgeCheck className="size-4" aria-hidden="true" />
-          Verified only
+          <FlaskConical className="size-6 shrink-0 text-muted-foreground" />
           <span
             className={cn(
-              "ml-auto text-sm tabular-nums",
-              verifiedOnly ? "text-emerald-600/70" : "text-muted-foreground/70"
+              "flex-1 truncate",
+              category === "All" ? "font-bold" : "text-muted-foreground"
             )}
           >
-            {verifiedCount}
+            All servers
+          </span>
+          <span className="text-sm tabular-nums text-muted-foreground">
+            {MCP_SERVERS.length}
           </span>
         </button>
-        <div className="flex flex-wrap gap-1.5 px-1">
-          {prices.map((p) => (
+        {MCP_CATEGORIES.filter((c) => c !== "All").map((c) => {
+          const Icon = CATEGORY_ICONS[c] ?? FlaskConical;
+          const count = MCP_SERVERS.filter((s) => s.category === c).length;
+          const active = category === c;
+          return (
             <button
-              key={p}
+              key={c}
               type="button"
-              onClick={() => onPriceFilter(p)}
-              className={cn(
-                "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
-                priceFilter === p
-                  ? "border-foreground bg-foreground text-background"
-                  : "border-border bg-card text-muted-foreground hover:border-foreground/40 hover:text-foreground"
-              )}
+              onClick={() => onCategory(c)}
+              className="flex w-full items-center gap-3 rounded-full px-3 py-2 text-left text-lg transition-colors hover:bg-muted"
+              aria-pressed={active}
             >
-              {p}
+              <Icon className="size-6 shrink-0 text-muted-foreground" />
+              <span
+                className={cn(
+                  "flex-1 truncate",
+                  active ? "font-bold" : "text-muted-foreground"
+                )}
+              >
+                {c}
+              </span>
+              <span className="text-sm tabular-nums text-muted-foreground">
+                {count}
+              </span>
             </button>
-          ))}
-        </div>
+          );
+        })}
       </div>
 
-      {/* Featured promo */}
-      <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-100 p-4">
-        <p className="text-sm font-bold uppercase tracking-wide text-orange-700">
-          Featured
-        </p>
-        <p className="mt-1 text-lg font-semibold text-orange-950">
-          GitHub · the most installed server
-        </p>
-        <p className="mt-1 text-sm leading-relaxed text-orange-800/80">
-          Repos, issues, PRs and code search — 39.5k stars and rising.
-        </p>
+      <p className="px-3 pb-2 pt-5 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+        Price
+      </p>
+      <div className="flex flex-wrap gap-2 px-3">
+        {prices.map((p) => (
+          <button
+            key={p}
+            type="button"
+            onClick={() => onPriceFilter(p)}
+            aria-pressed={priceFilter === p}
+            className={cn(
+              "rounded-full border px-3 py-1 text-sm font-bold transition-colors",
+              priceFilter === p
+                ? "border-foreground bg-foreground text-background"
+                : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
+            )}
+          >
+            {p}
+          </button>
+        ))}
       </div>
 
-      {/* Your stack */}
-      <div className="rounded-2xl border border-border/60 bg-card p-4">
-        <p className="flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          <ShoppingCart className="size-4" aria-hidden="true" />
-          Your stack
-        </p>
-        {stack.size > 0 ? (
-          <>
-            <ul className="mt-3 flex max-h-40 flex-col gap-1.5 overflow-y-auto pr-1">
-              {Array.from(stack).map((id) => {
-                const s = MCP_SERVERS.find((x) => x.id === id) as McpServer;
-                return (
-                  <li key={id} className="flex items-center gap-2 text-base">
-                    <span className="text-base" aria-hidden="true">
-                      {s.icon}
-                    </span>
-                    <span className="truncate font-medium">{s.name}</span>
-                  </li>
-                );
-              })}
-            </ul>
-            <button
-              type="button"
-              onClick={onOpenCart}
-              className="mt-3 w-full rounded-full bg-foreground px-3 py-2 text-base font-medium text-background hover:opacity-90"
-            >
-              View cart ({stack.size})
-            </button>
-          </>
-        ) : (
-          <p className="mt-3 text-base text-muted-foreground">
-            Your stack is empty. Add servers while you shop.
-          </p>
-        )}
-      </div>
+      <button
+        type="button"
+        onClick={onOpenCart}
+        className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-foreground py-3.5 text-lg font-bold text-background transition-opacity hover:opacity-90"
+      >
+        <ShoppingCart className="size-5" aria-hidden="true" />
+        Your Stack{stack.size > 0 ? ` (${stack.size})` : ""}
+      </button>
     </div>
   );
 }
